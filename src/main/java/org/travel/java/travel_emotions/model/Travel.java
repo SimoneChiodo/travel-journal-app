@@ -1,6 +1,7 @@
 package org.travel.java.travel_emotions.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 import jakarta.persistence.CollectionTable;
@@ -42,6 +43,9 @@ public class Travel {
 
   @NotBlank(message = "Description cannot be blank")
   private String description;
+
+  @NotNull(message = "Date cannot be null")
+  private LocalDate date;
 
   private String feelings;
 
