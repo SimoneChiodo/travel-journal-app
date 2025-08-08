@@ -73,6 +73,14 @@ public class Travel {
 
   // Getters and Setters
 
+  public LocalDate getDate() {
+    return this.date;
+  }
+
+  public void setDate(LocalDate date) {
+    this.date = date;
+  }
+
   public Long getId() {
     return this.id;
   }

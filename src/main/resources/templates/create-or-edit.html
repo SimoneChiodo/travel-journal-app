@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta th:field="*{viewport}" content="width=device-width, initial-scale=1.0" />
+    <title th:text="${isCreate} ? 'Create' : 'Edit'"></title>
+
+    <!-- FAVICON -->
+    <link rel="icon" href="#" sizes="16x16 24x24 48x48 64x64 128x128" />
+
+    <!-- BOOTSTRAP CSS -->
+    <link
+      rel="stylesheet"
+      th:href="@{/webjars/bootstrap/5.3.5/css/bootstrap.min.css}"
+    />
+    <!-- BOOTSTRAP JS -->
+    <script
+      src="/webjars/bootstrap/5.3.5/js/bootstrap.bundle.min.js"
+      defer
+    ></script>
+
+    <!-- FONTAWESOME -->
+    <link
+      rel="stylesheet"
+      th:href="@{/webjars/font-awesome/6.7.2/css/all.min.css}"
+    />
+
+    <!-- CUSTOM CSS -->
+    <link rel="stylesheet" th:href=@{./css/style.css} />
+    <!-- CUSTOM JS -->
+    <script th:src="@{/js/script.js}" defer></script>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="px-4">
+      <h1>Crete/Edit</h1>
+    </header>
+
+    <!-- Main -->
+    <main class="container my-5">
+      <!-- FORM -->
+      <form class="row g-3" th:action="${isCreate} ? @{|/travel/create|} : @{/travel/edit/{id}(id=*{id})}" th:object="${travel}" method="POST">
+        <!-- Place -->
+        <div class="col-md-6">
+          <label for="place" class="form-label fw-semibold">* Place</label>
+          <input type="text" id="place" class="form-control" th:field="*{place}" required />
+        </div>
+
+        <!-- Date -->
+        <div class="col-md-6">
+          <label for="date" class="form-label fw-semibold">* Date</label>
+          <input type="date" id="date" class="form-control" th:field="*{date}" required />
+        </div>
+
+        <!-- Description -->
+        <div class="col-12">
+          <label for="description" class="form-label fw-semibold">* Description</label>
+          <textarea id="description" class="form-control" th:field="*{description}" required></textarea>
+        </div>
+
+        <!-- Feelings -->
+        <div class="col-12">
+          <label for="feelings" class="form-label fw-semibold">Feelings</label>
+          <input type="text" id="feelings" class="form-control" th:field="*{feelings}" />
+        </div>
+
+        <!-- Reflection Positive -->
+        <div class="col-md-6">
+          <label for="reflectionPos" class="form-label fw-semibold">Reflection Positive</label>
+          <textarea id="reflectionPos" class="form-control" th:field="*{reflectionPos}"></textarea>
+        </div>
+
+        <!-- Reflection Negative -->
+        <div class="col-md-6">
+          <label for="reflectionNeg" class="form-label fw-semibold">Reflection Negative</label>
+          <textarea id="reflectionNeg" class="form-control" th:field="*{reflectionNeg}"></textarea>
+        </div>
+
+        <!-- Strength Rating -->
+        <div class="col-md-6">
+          <label for="strengthRating" class="form-label fw-semibold">* Strength Rating (1-5)</label>
+          <input type="number" id="strengthRating" class="form-control" th:field="*{strengthRating}" min="1" max="5" required />
+        </div>
+
+        <!-- Monetary Rating -->
+        <div class="col-md-6">
+          <label for="monetaryRating" class="form-label fw-semibold">* Monetary Rating (1-5)</label>
+          <input type="number" id="monetaryRating" class="form-control" th:field="*{monetaryRating}" min="1" max="5" required />
+        </div>
+
+        <!-- Cost -->
+        <div class="col-12">
+          <label for="cost" class="form-label fw-semibold">* Cost</label>
+          <input type="number" id="cost" class="form-control" th:field="*{cost}" step="0.01" min="0" required />
+        </div>
+
+
+        <!-- Tags -->
+        <div class="col-12">
+          <label class="form-label fw-semibold">Tags</label>
+          <div class="d-flex gap-3">
+            <div th:each="tag : ${tags}" class="form-check">
+              <input class="form-check-input" type="checkbox" th:id="${tag.name}">
+              <label class="form-check-label" th:for="${tag.name}" th:text="${tag.name}"></label>
+            </div>
+          </div>
+
+          <!-- Add new tag button -->
+          <a class="btn btn-success" th:href="@{/tags/create}" target="_blank" rel="noopener noreferrer">Crea Tag</a>
+        </div>
+
+
+        <!-- INFO -->
+        <div class="col-12">
+          <i>* = obligatory</i>
+        </div>
+        
+        <!-- SUBMIT -->
+        <div class="col-12 text-center">
+          <button class="btn btn-primary px-4" type="submit">Confirm</button>
+        </div>
+      </form>
+    </main>
+  </body>
+</html>

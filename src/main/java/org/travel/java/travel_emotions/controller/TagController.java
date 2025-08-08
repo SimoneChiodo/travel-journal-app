@@ -22,7 +22,7 @@ public class TagController {
   private TagService tagService;
 
   // INDEX
-  @GetMapping("/")
+  @GetMapping("/tag")
   public String index(Model model) {
     model.addAttribute("tags", tagService.findAll());
     return "tags/index"; 
@@ -39,19 +39,21 @@ public class TagController {
   @GetMapping("/create")
   public String create(Model model) {
     model.addAttribute("tag", new Tag());
-    return "tags/create-or-update"; 
+    model.addAttribute("isCreate", true);
+    return "tags/create-or-edit"; 
   }
 
   // SAVE
-  @GetMapping("/save")
+  @PostMapping("/create")
   public String save(@Valid @ModelAttribute Tag formTag, BindingResult bindingResult, Model model) {
     if (bindingResult.hasErrors()) {
       model.addAttribute("tag", formTag);
+      model.addAttribute("isCreate", true);
       return "tags/create-or-edit";
     }
 
     tagService.save(formTag);
-    return "redirect:/tags";
+    return "redirect:/home";
   }
 
   // EDIT
@@ -59,6 +61,7 @@ public class TagController {
   public String edit(@PathVariable Long id, Model model) {
     Tag tag = tagService.findById(id);
     model.addAttribute("tag", tag);
+    model.addAttribute("isCreate", true);
     return "tags/create-or-edit";
   }
 
@@ -67,6 +70,7 @@ public class TagController {
   public String update(@Valid @ModelAttribute Tag formTag, BindingResult bindingResult, Model model) {
     if (bindingResult.hasErrors()) {
       model.addAttribute("tag", formTag);
+      model.addAttribute("isCreate", true);
       return "tags/create-or-edit";
     }
 
