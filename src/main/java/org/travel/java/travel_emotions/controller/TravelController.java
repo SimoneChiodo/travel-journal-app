@@ -1,5 +1,8 @@
 package org.travel.java.travel_emotions.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,6 +12,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.travel.java.travel_emotions.model.Tag;
 import org.travel.java.travel_emotions.model.Travel;
 import org.travel.java.travel_emotions.service.TagService;
 import org.travel.java.travel_emotions.service.TravelService;
@@ -24,18 +29,16 @@ public class TravelController {
   @Autowired
   private TagService tagService;
 
-  
   @GetMapping("/")
   public String goToHome() {
     return "redirect:/home";
   }
 
-
   // INDEX
   @GetMapping("/home")
   public String index(Model model) {
     model.addAttribute("travels", travelService.findAll());
-    return "index"; 
+    return "travels/index"; 
   }
 
   // SHOW
@@ -52,16 +55,24 @@ public class TravelController {
     model.addAttribute("tags", tagService.findAll());
     model.addAttribute("isCreate", true);
 
-    return "create-or-edit"; 
+    return "travels/create-or-edit"; 
   }
 
   // SAVE
   @PostMapping("/travel/create")
-  public String save(@Valid @ModelAttribute Travel formTravel, BindingResult bindingResult, Model model) {
+  public String save(@Valid @ModelAttribute Travel formTravel, @RequestParam(required = false) List<Long> selectedTags, BindingResult bindingResult, Model model) {
     if (bindingResult.hasErrors()) {
       model.addAttribute("travel", formTravel);
       model.addAttribute("isCreate", true);
-      return "create-or-edit";
+      return "travels/create-or-edit";
+    }
+
+    // Se sono stati selezionati tag, li recupero dal DB
+    if (selectedTags != null) {
+        List<Tag> tags = selectedTags.stream()
+          .map(tagService::findById)
+          .collect(Collectors.toList());
+        formTravel.setTags(tags);
     }
     
     travelService.save(formTravel);
@@ -73,9 +84,10 @@ public class TravelController {
   public String edit(@PathVariable Long id, Model model) {
     Travel travel = travelService.findById(id);
     model.addAttribute("travel", travel);
+    model.addAttribute("tags", tagService.findAll());
     model.addAttribute("isCreate", false);
 
-    return "create-or-edit";
+    return "travels/create-or-edit";
   }
 
   // UPDATE
@@ -84,7 +96,7 @@ public class TravelController {
     if (bindingResult.hasErrors()) {
       model.addAttribute("travel", formTravel);
       model.addAttribute("isCreate", false);
-      return "create-or-edit";
+      return "travels/create-or-edit";
     }
 
     travelService.update(formTravel);
@@ -95,7 +107,7 @@ public class TravelController {
   @GetMapping("/travel/delete/{id}")
   public String delete(@PathVariable Long id) {
     travelService.delete(id);
-    return "redirect:/travels/";
+    return "redirect:/home";
   }
 
 }

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Import CSS from Webjars -->
+    <th:block th:fragment="import-css">
+      <!-- BOOTSTRAP CSS -->
+      <link
+        rel="stylesheet"
+        th:href="@{/webjars/bootstrap/5.3.5/css/bootstrap.min.css}"
+      />
+      <!-- BOOTSTRAP JS -->
+      <script
+        src="/webjars/bootstrap/5.3.5/js/bootstrap.bundle.min.js"
+        defer
+      ></script>
+
+      <!-- FONTAWESOME -->
+      <link
+        rel="stylesheet"
+        th:href="@{/webjars/font-awesome/6.7.2/css/all.min.css}"
+      />
+    </th:block>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <th:block th:fragment="navbar(currentPage)">
+      <nav class="navbar navbar-expand-lg bg-body-tertiary mb-5">
+        <div class="ps-4 container-fluid">
+          <!-- LOGO -->
+          <h2 class="display-1 fs-3 pb-1 pe-4 m-0">Journal App</h2>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <!-- LINK -->
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  aria-current="page"
+                  th:href="@{/home}"
+                  th:classappend="${currentPage == 'home'} ? 'active' : ''"
+                  >Home</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  th:href="@{/travel/create}"
+                  th:classappend="${currentPage == 'addTravel'} ? 'active' : ''"
+                  >Add Travel</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  th:href="@{/tag/create}"
+                  th:classappend="${currentPage == 'addTag'} ? 'active' : ''"
+                  >Add Tag</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  th:href="@{/tag}"
+                  th:classappend="${currentPage == 'tagList'} ? 'active' : ''"
+                  >Tag List</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </th:block>
+  </body>
+</html>

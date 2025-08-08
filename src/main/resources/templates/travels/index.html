@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta th:field="*{viewport}" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+
+    <!-- FAVICON -->
+    <link rel="icon" href="#" sizes="16x16 24x24 48x48 64x64 128x128" />
+
+    <!-- IMPORT CSS -->
+    <th:block th:replace="~{fragments :: import-css}"></th:block>
+  </head>
+  <body>
+    <!-- Header -->
+    <header>
+      <th:block th:replace="~{fragments :: navbar('home')}"></th:block>
+    </header>
+
+    <!-- Main -->
+    <main class="container my-5">
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 gap-4">
+        <div class="col" th:each="travel : ${travels}" th:object="${travel}">
+          <div class="card" style="width: 18rem;">
+            <img th:src="*{photos}" class="card-img-top" alt="...">
+
+            <div class="card-body">
+              <!-- <p class="card-text" th:text="*{videos}"></p> -->
+              <p class="card-text" th:text="*{place}"></p>
+              <p class="card-text" th:text="*{description}"></p>
+              <p class="card-text" th:text="*{date}"></p>
+              <p class="card-text" th:text="*{feelings}"></p>
+              <p class="card-text" th:text="*{reflectionPos}"></p>
+              <p class="card-text" th:text="*{reflectionNeg}"></p>
+              <p class="card-text" th:text="*{strengthRating}"></p>
+              <p class="card-text" th:text="*{monetaryRating}"></p>
+              <p class="card-text" th:text="*{cost}"></p>
+              <div class="tags-container">
+                <span class="badge" th:text="${tag.name}" th:each="tag : *{tags}" th:style="'background-color:' + ${tag.hexColor}"></span>
+              </div>
+            </div>
+
+            <!-- Edit Travel -->
+            <a class="btn btn-primary" th:href="@{/travel/edit/{id} (id=*{id})}">Edit Travel</a>
+          </div>
+          
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

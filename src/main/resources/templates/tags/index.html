@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta th:field="*{viewport}" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+
+    <!-- FAVICON -->
+    <link rel="icon" href="#" sizes="16x16 24x24 48x48 64x64 128x128" />
+
+    <!-- IMPORT CSS -->
+    <th:block th:replace="~{fragments :: import-css}"></th:block>
+  </head>
+  <body>
+    <!-- Header -->
+    <header>
+      <th:block th:replace="~{fragments :: navbar('tagList')}"></th:block>
+    </header>
+
+    <!-- Main -->
+    <main class="container my-5">
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 gap-4">
+        <div class="col border" th:each="tag : ${tags}" th:object="${tag}">
+          <span class="badge" th:text="*{name}" th:style="'background-color:' + *{hexColor}"></span>
+
+          <!-- Edit Tag -->
+          <a class="btn btn-primary" th:href="@{/tag/edit/{id} (id=*{id})}">Edit Tag</a>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

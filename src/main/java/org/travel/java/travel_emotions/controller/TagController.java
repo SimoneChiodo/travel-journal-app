@@ -15,14 +15,14 @@ import org.travel.java.travel_emotions.service.TagService;
 import jakarta.validation.Valid;
 
 @Controller
-@RequestMapping("/tags")
+@RequestMapping("/tag")
 public class TagController {
   
   @Autowired
   private TagService tagService;
 
   // INDEX
-  @GetMapping("/tag")
+  @GetMapping("")
   public String index(Model model) {
     model.addAttribute("tags", tagService.findAll());
     return "tags/index"; 
@@ -53,7 +53,7 @@ public class TagController {
     }
 
     tagService.save(formTag);
-    return "redirect:/home";
+    return "redirect:/tag";
   }
 
   // EDIT
@@ -61,7 +61,7 @@ public class TagController {
   public String edit(@PathVariable Long id, Model model) {
     Tag tag = tagService.findById(id);
     model.addAttribute("tag", tag);
-    model.addAttribute("isCreate", true);
+    model.addAttribute("isCreate", false);
     return "tags/create-or-edit";
   }
 
@@ -70,12 +70,12 @@ public class TagController {
   public String update(@Valid @ModelAttribute Tag formTag, BindingResult bindingResult, Model model) {
     if (bindingResult.hasErrors()) {
       model.addAttribute("tag", formTag);
-      model.addAttribute("isCreate", true);
+      model.addAttribute("isCreate", false);
       return "tags/create-or-edit";
     }
 
     tagService.update(formTag);
-    return "redirect:/tags/" + formTag.getId();
+    return "redirect:/tag";
   }
 
   // DELETE

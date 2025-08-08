@@ -8,32 +8,13 @@
     <!-- FAVICON -->
     <link rel="icon" href="#" sizes="16x16 24x24 48x48 64x64 128x128" />
 
-    <!-- BOOTSTRAP CSS -->
-    <link
-      rel="stylesheet"
-      th:href="@{/webjars/bootstrap/5.3.5/css/bootstrap.min.css}"
-    />
-    <!-- BOOTSTRAP JS -->
-    <script
-      src="/webjars/bootstrap/5.3.5/js/bootstrap.bundle.min.js"
-      defer
-    ></script>
-
-    <!-- FONTAWESOME -->
-    <link
-      rel="stylesheet"
-      th:href="@{/webjars/font-awesome/6.7.2/css/all.min.css}"
-    />
-
-    <!-- CUSTOM CSS -->
-    <link rel="stylesheet" th:href=@{./css/style.css} />
-    <!-- CUSTOM JS -->
-    <script th:src="@{/js/script.js}" defer></script>
+    <!-- IMPORT CSS -->
+    <th:block th:replace="~{fragments :: import-css}"></th:block>
   </head>
   <body>
     <!-- Header -->
-    <header class="px-4">
-      <h1>Crete/Edit</h1>
+    <header>
+      <th:block th:replace="~{fragments :: navbar('addTravel')}"></th:block>
     </header>
 
     <!-- Main -->
@@ -100,13 +81,13 @@
           <label class="form-label fw-semibold">Tags</label>
           <div class="d-flex gap-3">
             <div th:each="tag : ${tags}" class="form-check">
-              <input class="form-check-input" type="checkbox" th:id="${tag.name}">
-              <label class="form-check-label" th:for="${tag.name}" th:text="${tag.name}"></label>
+              <input class="form-check-input" type="checkbox"  th:id="${'tag-' + tag.id}" th:field="*{tags}" th:value="${tag.id}">
+              <label class="form-check-label" th:for="${'tag-' + tag.id}" th:text="${tag.name}"></label>
             </div>
           </div>
 
           <!-- Add new tag button -->
-          <a class="btn btn-success" th:href="@{/tags/create}" target="_blank" rel="noopener noreferrer">Crea Tag</a>
+          <a class="btn btn-success" th:href="@{/tag/create}" rel="noopener noreferrer">Crea Tag</a>
         </div>
 
 
