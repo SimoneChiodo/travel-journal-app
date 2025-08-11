@@ -21,19 +21,22 @@
     <main class="container my-5">
       <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 gap-4">
         <div class="col" th:each="travel : ${travels}" th:object="${travel}">
-          <div class="card" style="width: 18rem;">
+          <div class="card h-100" style="width: 18rem;">
             <img th:src="*{photos}" class="card-img-top" alt="...">
 
             <div class="card-body">
-              <!-- <p class="card-text" th:text="*{videos}"></p> -->
-              <p class="card-text" th:text="*{place}"></p>
-              <p class="card-text" th:text="*{description}"></p>
-              <p class="card-text" th:text="*{date}"></p>
-              <p class="card-text" th:text="*{feelings}"></p>
-              <p class="card-text" th:text="*{reflectionPos}"></p>
-              <p class="card-text" th:text="*{reflectionNeg}"></p>
-              <p class="card-text" th:text="*{strengthRating}"></p>
-              <p class="card-text" th:text="*{monetaryRating}"></p>
+              <div class="d-flex justify-content-between">
+                <p class="card-text" th:text="*{place}"></p>
+                <p class="card-text" th:text="*{date}"></p>
+              </div>
+              <div class="d-flex justify-content-between">
+                <p class="card-text" 
+                  th:with="pos=${#strings.repeat('🦾', travel.strengthRating)}, neg=${#strings.repeat('N', 5 - travel.strengthRating)}" 
+                  th:text="${pos + neg}"></p>
+                <p class="card-text" 
+                  th:with="pos=${#strings.repeat('$', travel.monetaryRating)}, neg=${#strings.repeat('N', 5 - travel.monetaryRating)}" 
+                  th:text="${pos + neg}"></p>
+              </div>
               <p class="card-text" th:text="*{cost}"></p>
               <div class="tags-container">
                 <span class="badge" th:text="${tag.name}" th:each="tag : *{tags}" th:style="'background-color:' + ${tag.hexColor}"></span>
