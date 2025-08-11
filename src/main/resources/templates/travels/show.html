@@ -19,27 +19,117 @@
 
     <!-- Main -->
     <main class="container my-5" th:object="${travel}">
-      <img th:if="*{photos.size() > 0}"  th:src="*{photos[0]}" class="card-img-top" alt="..." draggable="false" height="200">
-      <video th:if="*{videos.size() > 0}" class="card-img-top" height="200" controls>
-        <source th:src="*{videos[0]}" type="video/mp4">
-        Il tuo browser non supporta il tag video.
-      </video>
+      <div class="d-flex flex-column flex-lg-row mt-3">
+        <!-- Image Carousel -->
+        <div class="img-container d-flex justify-content-center">
+          <div id="carouselIndicators" class="carousel slide">
+            <div class="carousel-inner ratio ratio-1x1">
 
-      <p class="card-text" th:text="*{place}"></p>
-      <p class="card-text" th:text="*{description}"></p>
-      <p class="card-text" th:text="*{date}"></p>
-      <p class="card-text" th:text="*{feelings}"></p>
-      <p class="card-text" th:text="*{reflectionPos}"></p>
-      <p class="card-text" th:text="*{reflectionNeg}"></p>
-      <p class="card-text" th:text="*{strengthRating}"></p>
-      <p class="card-text" th:text="*{monetaryRating}"></p>
-      <p class="card-text" th:text="*{cost}"></p>
-      <div class="tags-container">
-        <span class="badge" th:text="${tag.name}" th:each="tag : *{tags}" th:style="'background-color:' + ${tag.hexColor}"></span>
-      </div>
+              <!-- Controlla se ci sono foto o video -->
+              <th:block th:if="${travel.photos.size() == 0 and travel.videos.size() == 0}">
+                <!-- Caso fallback: nessuna immagine o video -->
+                <div class="carousel-item active">
+                  <h2>No image</h2>
+                </div>
+              </th:block>
 
-      <!-- Edit Travel -->
-      <a class="btn btn-warning" th:href="@{/travel/edit/{id} (id=*{id})}">Edit Travel</a>
+              <!-- Cicla sulle foto -->
+              <th:block th:each="photo, iterStat : ${travel.photos}" th:if="${travel.photos.size() != 0}">
+                <div th:classappend="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
+                  <img th:src="${photo}" class="d-block w-100" alt="Photo" />
+                </div>
+              </th:block>
+
+              <!-- Cicla sui video -->
+              <th:block th:each="video, iterStat : ${travel.videos}" th:if="${travel.videos.size() != 0}">
+                <div th:classappend="${(travel.photos.size() == 0 and iterStat.index == 0) ? 'carousel-item active' : 'carousel-item'}">
+                  <!-- Usa iframe per video YouTube/Vimeo o video per file diretti -->
+                  <th:block th:if="${video.contains('youtube') or video.contains('youtu.be') or video.contains('vimeo')}">
+                    <iframe th:src="${video}" width="100%" height="400" frameborder="0" allowfullscreen></iframe>
+                  </th:block>
+                  <th:block th:unless="${video.contains('youtube') or video.contains('youtu.be') or video.contains('vimeo')}">
+                    <video controls class="d-block w-100" height="400">
+                      <source th:src="${video}" />
+                      Il tuo browser non supporta il tag video.
+                    </video>
+                  </th:block>
+                </div>
+              </th:block>
+
+            </div>
+
+            <!-- Indicators -->
+            <div class="carousel-indicators custom-thumbnails mt-3">
+              
+              <!-- Fallback -->
+              <th:block th:if="${travel.photos.size() == 0 and travel.videos.size() != 0}">
+                <button type="button" data-bs-target="#carouselIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1">
+                  <h2>Empty</h2>
+                </button>
+              </th:block>
+
+              <!-- Indicatori per le foto -->
+              <th:block th:each="photo, iterStat : ${travel.photos}" th:if="${travel.photos.size() != 0}">
+                <button type="button"
+                        data-bs-target="#carouselIndicators"
+                        th:attr="data-bs-slide-to=${iterStat.index}, 
+                          aria-current=${iterStat.index == 0} ? 'true' : null,
+                          aria-label=${'Slide ' + (iterStat.index + 1)}"
+                        th:classappend="${iterStat.index == 0} ? 'active' : ''">
+                  <img th:src="${photo}" alt="Thumbnail" class="hover-pointer" draggable="false" />
+                </button>
+              </th:block>
+
+              <!-- Indicatori per i video -->
+              <th:block th:each="video, iterStat : ${travel.videos}" th:if="${travel.videos.size() != 0}">
+                <button type="button"
+                        data-bs-target="#carouselIndicators"
+                        th:attr="data-bs-slide-to=${(travel.photos.size() + iterStat.index)}, 
+                          aria-current=${(travel.photos.size() == 0 and iterStat.index == 0)} ? 'true' : null,
+                          aria-label=${'Slide ' + (travel.photos.size() + iterStat.index + 1)}"
+                        th:classappend="${(travel.photos.size() == 0 and iterStat.index == 0) ? 'active' : ''}">
+                  <!-- Miniatura: se è video YouTube/Vimeo metti un’icona o thumbnail, altrimenti usa video stesso come immagine -->
+                  <th:block th:if="${video.contains('youtube') or video.contains('youtu.be') or video.contains('vimeo')}">
+                    <img src="/assets/img/video-thumbnail.png" alt="Video Thumbnail" class="hover-pointer" draggable="false" />
+                  </th:block>
+                  <th:block th:unless="${video.contains('youtube') or video.contains('youtu.be') or video.contains('vimeo')}">
+                    <video width="60" height="40" preload="metadata" muted>
+                      <source th:src="${video}" />
+                    </video>
+                  </th:block>
+                </button>
+              </th:block>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Informations -->
+        <div class="py-3 py-md-0 px-4">
+          <div class="vinyl-details">
+            <h2 class="mb-2" th:text="*{place}"></h2>
+
+            <h3 class="mb-4" th:text="*{date}"></h3>
+
+            <h4>About the travel: </h4>
+            <ul>
+              <li class="card-text" th:text="*{description}"></li>
+              <li class="card-text" th:text="*{feelings}"></li>
+              <li class="card-text" th:text="*{reflectionPos}"></li>
+              <li class="card-text" th:text="*{reflectionNeg}"></li>
+              <li class="card-text" th:text="*{strengthRating}"></li>
+              <li class="card-text" th:text="*{monetaryRating}"></li>
+              <li class="card-text" th:text="*{cost}"></li>
+            </ul>
+            <div class="tags-container">
+              <span class="badge" th:text="${tag.name}" th:each="tag : *{tags}" th:style="'background-color:' + ${tag.hexColor}"></span>
+            </div>
+            
+            <!-- Edit Travel -->
+            <a class="btn btn-warning" th:href="@{/travel/edit/{id} (id=*{id})}">Edit Travel</a>
+          </div>
+        </div>
+      </div> 
     </main>
   </body>
 </html>
