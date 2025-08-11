@@ -39,24 +39,6 @@
           <textarea id="description" class="form-control" th:field="*{description}" required></textarea>
         </div>
 
-        <!-- Feelings -->
-        <div class="col-12">
-          <label for="feelings" class="form-label fw-semibold">Feelings</label>
-          <input type="text" id="feelings" class="form-control" th:field="*{feelings}" />
-        </div>
-
-        <!-- Reflection Positive -->
-        <div class="col-md-6">
-          <label for="reflectionPos" class="form-label fw-semibold">Reflection Positive</label>
-          <textarea id="reflectionPos" class="form-control" th:field="*{reflectionPos}"></textarea>
-        </div>
-
-        <!-- Reflection Negative -->
-        <div class="col-md-6">
-          <label for="reflectionNeg" class="form-label fw-semibold">Reflection Negative</label>
-          <textarea id="reflectionNeg" class="form-control" th:field="*{reflectionNeg}"></textarea>
-        </div>
-
         <!-- Strength Rating -->
         <div class="col-md-6">
           <label for="strengthRating" class="form-label fw-semibold">* Strength Rating (1-5)</label>
@@ -75,6 +57,24 @@
           <input type="number" id="cost" class="form-control" th:field="*{cost}" step="0.01" min="0" required />
         </div>
 
+        <!-- Feelings -->
+        <div class="col-12">
+          <label for="feelings" class="form-label fw-semibold">Feelings</label>
+          <input type="text" id="feelings" class="form-control" th:field="*{feelings}" />
+        </div>
+
+        <!-- Reflection Positive -->
+        <div class="col-md-6">
+          <label for="reflectionPos" class="form-label fw-semibold">Reflection Positive</label>
+          <textarea id="reflectionPos" class="form-control" th:field="*{reflectionPos}"></textarea>
+        </div>
+
+        <!-- Reflection Negative -->
+        <div class="col-md-6">
+          <label for="reflectionNeg" class="form-label fw-semibold">Reflection Negative</label>
+          <textarea id="reflectionNeg" class="form-control" th:field="*{reflectionNeg}"></textarea>
+        </div>
+
 
         <!-- Tags -->
         <div class="col-12">
@@ -82,12 +82,14 @@
           <div class="d-flex gap-3">
             <div th:each="tag : ${tags}" class="form-check">
               <input class="form-check-input" type="checkbox"  th:id="${'tag-' + tag.id}" th:field="*{tags}" th:value="${tag.id}">
-              <label class="form-check-label" th:for="${'tag-' + tag.id}" th:text="${tag.name}"></label>
+              <label class="form-check-label" th:for="${'tag-' + tag.id}"><span class="badge" th:text="${tag.name}" th:style="'background-color:' + ${tag.hexColor}"></span></label>
             </div>
           </div>
 
           <!-- Add new tag button -->
-          <a class="btn btn-success" th:href="@{/tag/create}" rel="noopener noreferrer">Crea Tag</a>
+          <div class="text-center">
+            <a class="btn btn-outline-success mt-3" th:href="@{/tag/create}" rel="noopener noreferrer">+ Create New Tag</a>
+          </div>
         </div>
 
 
@@ -98,7 +100,7 @@
         
         <!-- SUBMIT -->
         <div class="col-12 text-center">
-          <button class="btn btn-primary px-4" type="submit">Confirm</button>
+          <button class="btn btn-lg btn-primary px-5" type="submit">Confirm</button>
         </div>
       </form>
     </main>

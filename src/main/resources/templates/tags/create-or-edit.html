@@ -23,7 +23,7 @@
       <form class="row g-3" th:action="${isCreate} ? @{/tag/create} : @{/tag/edit/{id}(id=*{id})}" th:object="${tag}" method="POST">
         <!-- Name -->
         <div class="col-12">
-          <label for="name" class="form-label fw-semibold">New Tag</label>
+          <label for="name" class="form-label fw-semibold">Name</label>
           <input type="text" id="name" class="form-control" th:field="*{name}" required />
         </div>
 
