@@ -24,7 +24,9 @@
           <span class="badge" th:text="*{name}" th:style="'background-color:' + *{hexColor}"></span>
 
           <!-- Edit Tag -->
-          <a class="btn btn-primary" th:href="@{/tag/edit/{id} (id=*{id})}">Edit Tag</a>
+          <a class="btn btn-warning" th:href="@{/tag/edit/{id} (id=*{id})}">Edit Tag</a>
+          <!-- Show Tag -->
+          <a class="btn btn-primary" th:href="@{/tag/{id} (id=*{id})}">Show Tag</a>
         </div>
       </div>
     </main>
