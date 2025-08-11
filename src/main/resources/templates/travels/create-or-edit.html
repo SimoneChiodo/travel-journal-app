@@ -75,7 +75,6 @@
           <textarea id="reflectionNeg" class="form-control" th:field="*{reflectionNeg}"></textarea>
         </div>
 
-
         <!-- Tags -->
         <div class="col-12">
           <label class="form-label fw-semibold">Tags</label>
@@ -91,6 +90,20 @@
             <a class="btn btn-outline-success mt-3" th:href="@{/tag/create}" rel="noopener noreferrer">+ Create New Tag</a>
           </div>
         </div>
+
+
+        <!-- Photos -->
+        <div class="col-12">
+          <label for="photos" class="form-label fw-semibold">Photo URLs</label>
+          <input type="url" id="photos" class="form-control" th:field="*{photos}" placeholder="https://example.com/photo1.jpg">
+        </div>
+
+        <!-- Videos -->
+        <div class="col-12">
+          <label for="videos" class="form-label fw-semibold">Video URLs</label>
+          <input type="url" id="videos" class="form-control" th:field="*{videos}" placeholder="https://youtube.com/...">
+        </div>
+
 
 
         <!-- INFO -->

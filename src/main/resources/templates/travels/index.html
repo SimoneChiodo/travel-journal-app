@@ -22,7 +22,7 @@
       <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 gap-4">
         <div class="col" th:each="travel : ${travels}" th:object="${travel}">
           <div class="card h-100" style="width: 18rem;">
-            <img th:src="*{photos}" class="card-img-top" alt="...">
+            <img th:if="*{photos.size() > 0}"  th:src="*{photos[0]}" class="card-img-top" alt="..." draggable="false">
 
             <div class="card-body">
               <div class="d-flex justify-content-between">

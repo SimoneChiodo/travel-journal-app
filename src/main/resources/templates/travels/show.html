@@ -19,8 +19,12 @@
 
     <!-- Main -->
     <main class="container my-5" th:object="${travel}">
-      <img th:src="*{photos}" class="card-img-top" alt="...">
-      <p class="card-text" th:text="*{videos}"></p>
+      <img th:if="*{photos.size() > 0}"  th:src="*{photos[0]}" class="card-img-top" alt="..." draggable="false" height="200">
+      <video th:if="*{videos.size() > 0}" class="card-img-top" height="200" controls>
+        <source th:src="*{videos[0]}" type="video/mp4">
+        Il tuo browser non supporta il tag video.
+      </video>
+
       <p class="card-text" th:text="*{place}"></p>
       <p class="card-text" th:text="*{description}"></p>
       <p class="card-text" th:text="*{date}"></p>
