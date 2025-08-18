@@ -24,7 +24,11 @@
         <!-- Name -->
         <div class="col-12">
           <label for="name" class="form-label fw-semibold">Name</label>
-          <input type="text" id="name" class="form-control" th:field="*{name}" required />
+          <input type="text" id="name" class="form-control" th:field="*{name}" required
+            th:classappend="${#fields.hasErrors('name')} ? ' is-invalid' : ''" />
+          
+          <!-- Error message if the name is already taken -->
+          <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
         </div>
 
         <!-- Color -->

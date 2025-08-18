@@ -52,8 +52,16 @@ public class TagController {
       return "tags/create-or-edit";
     }
 
-    tagService.save(formTag);
-    return "redirect:/tag";
+    // Check if a tag with the same name already exists
+    try{
+      tagService.save(formTag);
+      return "redirect:/tag";
+    } catch (Exception e) {
+      model.addAttribute("tag", formTag);
+      model.addAttribute("isCreate", true);
+      bindingResult.rejectValue("name", "error.tag", "A tag with this name already exists.");
+      return "tags/create-or-edit";
+    }
   }
 
   // EDIT
@@ -74,8 +82,16 @@ public class TagController {
       return "tags/create-or-edit";
     }
 
-    tagService.update(formTag);
-    return "redirect:/tag";
+    // Check if a tag with the same name already exists
+    try{
+      tagService.update(formTag);
+      return "redirect:/tag";
+    } catch (Exception e) {
+      model.addAttribute("tag", formTag);
+      model.addAttribute("isCreate", false);
+      bindingResult.rejectValue("name", "error.tag", "A tag with this name already exists.");
+      return "tags/create-or-edit";
+    }
   }
 
   // DELETE
