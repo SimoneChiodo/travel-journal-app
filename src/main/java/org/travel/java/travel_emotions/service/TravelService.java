@@ -39,4 +39,21 @@ public class TravelService {
       travelRepository.deleteById(id);
   }
 
+  // Filtered Index
+  public List<Travel> filterTravels(String place, String feelings, List<Long> tagIds) {
+    boolean hasPlace = place != null && !place.isBlank();
+    boolean hasFeelings = feelings != null && !feelings.isBlank();
+    boolean hasTags = tagIds != null && !tagIds.isEmpty();
+
+    // No filters applied
+    if (!hasPlace && !hasFeelings && !hasTags) 
+      return travelRepository.findAll();
+    
+    // If tags are selected
+    if (hasTags) 
+      return travelRepository.findDistinctByPlaceContainingIgnoreCaseAndFeelingsContainingIgnoreCaseAndTags_IdIn(place, feelings, tagIds);
+    else // If no tags are selected
+      return travelRepository.findByPlaceContainingIgnoreCaseAndFeelingsContainingIgnoreCase(place, feelings);
+  }
+
 }

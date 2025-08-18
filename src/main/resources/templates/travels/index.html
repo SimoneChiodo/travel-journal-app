@@ -19,6 +19,53 @@
 
     <!-- Main -->
     <main class="container my-5">
+      <!-- Filters -->
+      <div class="accordion mb-4" id="accordionFilter">
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+              Filters
+            </button>
+          </h2>
+          <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFilter">
+            <form class="row p-4 g-3" th:action="@{|/home|}" method="POST">
+              <!-- Place -->
+              <div class="col-md-6">
+                <label for="place" class="form-label fw-semibold">Place</label>
+                <input type="text" id="place" class="form-control" th:name="search_place" th:value="${search_place}" />
+              </div>
+
+              <!-- Feelings -->
+              <div class="col-12">
+                <label for="feelings" class="form-label fw-semibold">Feelings</label>
+                <input type="text" id="feelings" class="form-control" th:name="search_feelings" th:value="${search_feelings}" />
+              </div>
+
+              <!-- Tags -->
+              <div class="col-12">
+                <label class="form-label fw-semibold">Tags</label>
+                <div class="d-flex gap-3">
+                  <div th:each="tag : ${tags}" class="form-check">
+                    <input class="form-check-input" type="checkbox" th:id="${'tag-' + tag.id}" th:name="search_tags" th:value="${tag.id}" th:checked="${search_tags.contains(tag.id)}" />
+                    <label class="form-check-label" th:for="${'tag-' + tag.id}"><span class="badge" th:text="${tag.name}" th:style="'background-color:' + ${tag.hexColor}"></span></label>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- SUBMIT -->
+              <div class="col-12 text-center">
+                <button class="btn btn-primary px-5" type="submit">Search</button>
+              </div>
+              <!-- CLEAN FILTERS -->
+              <div class="col-12 text-center">
+                <a href="/home" class="btn btn-sm btn-warning px-3">Clear Filters</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Travel List -->
       <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 gap-4">
         <div class="col" th:each="travel : ${travels}" th:object="${travel}">
           <div class="card h-100" style="width: 18rem;">

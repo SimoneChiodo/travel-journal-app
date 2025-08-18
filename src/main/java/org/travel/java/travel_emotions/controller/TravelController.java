@@ -1,5 +1,6 @@
 package org.travel.java.travel_emotions.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,6 +39,11 @@ public class TravelController {
   @GetMapping("/home")
   public String index(Model model) {
     model.addAttribute("travels", travelService.findAll());
+    model.addAttribute("search_place", new String());
+    model.addAttribute("search_feelings", new String());
+    model.addAttribute("search_tags", new ArrayList<Long>());
+    model.addAttribute("tags", tagService.findAll());
+
     return "travels/index"; 
   }
 
@@ -108,6 +114,21 @@ public class TravelController {
   public String delete(@PathVariable Long id) {
     travelService.delete(id);
     return "redirect:/home";
+  }
+
+  // Filtered Index
+  @PostMapping("/home")
+  public String filterTravels(@RequestParam(required=false) String search_place, @RequestParam(required=false) String search_feelings, @RequestParam(required=false) List<Long> search_tags, Model model) {
+    // Filtered travels
+    model.addAttribute("travels", travelService.filterTravels(search_place, search_feelings, search_tags)); 
+    // All tags
+    model.addAttribute("tags", tagService.findAll()); 
+    // Filters
+    model.addAttribute("search_place", search_place != null ? search_place : "");
+    model.addAttribute("search_feelings", search_feelings != null ? search_feelings : "");
+    model.addAttribute("search_tags", search_tags != null ? search_tags : new ArrayList<Long>());
+    
+    return "travels/index";
   }
 
 }

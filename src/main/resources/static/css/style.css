@@ -1,3 +1,11 @@
+/* Accordion (Travel List Page) */
+.accordion-button,
+.accordion-button:focus {
+  background-color: inherit !important;
+  box-shadow: none !important;
+}
+
+/* Carousel (Travel Details Page) */
 .carousel-item {
   transition: transform 0s; /* Slide duration */
 }
