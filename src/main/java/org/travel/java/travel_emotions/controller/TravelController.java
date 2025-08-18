@@ -1,6 +1,8 @@
 package org.travel.java.travel_emotions.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,6 +45,8 @@ public class TravelController {
     model.addAttribute("search_feelings", new String());
     model.addAttribute("search_tags", new ArrayList<Long>());
     model.addAttribute("tags", tagService.findAll());
+    model.addAttribute("orderBy", ""); 
+    model.addAttribute("sortBy", ""); 
 
     return "travels/index"; 
   }
@@ -118,9 +122,16 @@ public class TravelController {
 
   // Filtered Index
   @PostMapping("/home")
-  public String filterTravels(@RequestParam(required=false) String search_place, @RequestParam(required=false) String search_feelings, @RequestParam(required=false) List<Long> search_tags, Model model) {
+  public String filterTravels(@RequestParam(required=false) String search_place, @RequestParam(required=false) String search_feelings, @RequestParam(required=false) List<Long> search_tags, @RequestParam(required=false) String orderBy, @RequestParam(required = false) String sortBy, Model model) {
+    // Sorting Methods
+    orderBy = orderBy != null ? orderBy : "";
+    model.addAttribute("orderBy", orderBy); 
+    sortBy = sortBy != null ? sortBy : "asc";
+    model.addAttribute("sortBy", sortBy); 
     // Filtered travels
-    model.addAttribute("travels", travelService.filterTravels(search_place, search_feelings, search_tags)); 
+    List<Travel> travels = travelService.filterTravels(search_place, search_feelings, search_tags);
+    travels = sortTravels(travels, orderBy, sortBy);
+    model.addAttribute("travels", travels); 
     // All tags
     model.addAttribute("tags", tagService.findAll()); 
     // Filters
@@ -129,6 +140,38 @@ public class TravelController {
     model.addAttribute("search_tags", search_tags != null ? search_tags : new ArrayList<Long>());
     
     return "travels/index";
+  }
+
+  private List<Travel> sortTravels(List<Travel> travels, String orderBy, String sortBy) {
+    // If orderBy is not default
+    if (orderBy != "") {
+      // Ascending order
+      if(sortBy.equals("asc")){
+        switch (orderBy) {
+          case "cost":
+            travels.sort(Comparator.comparing(Travel::getCost));
+            break;
+          case "date":
+            travels.sort(Comparator.comparing(Travel::getDate));
+            break;
+        }
+      } else { // Descending order
+        switch (orderBy) {
+          case "cost":
+            travels.sort(Comparator.comparing(Travel::getCost).reversed());
+            break;
+          case "date":
+            travels.sort(Comparator.comparing(Travel::getDate).reversed());
+            break;
+        }
+      }
+    } else { // If orderBy is default
+      if(sortBy.equals("desc"))
+        Collections.reverse(travels);
+    }
+
+    // Don't sort
+    return travels;
   }
 
 }

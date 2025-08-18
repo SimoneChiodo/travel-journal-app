@@ -28,7 +28,7 @@
             </button>
           </h2>
           <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFilter">
-            <form class="row p-4 g-3" th:action="@{|/home|}" method="POST">
+            <form class="row p-4 g-3" th:action="@{/home}" method="POST">
               <!-- Place -->
               <div class="col-md-6">
                 <label for="place" class="form-label fw-semibold">Place</label>
@@ -51,6 +51,21 @@
                   </div>
                 </div>
               </div>
+
+              <!-- Order By -->
+              <label for="sortDropdown" class="form-label fw-semibold">Order By</label>
+              <select id="sortDropdown" name="orderBy" class="form-select">
+                <option value="" th:selected="${orderBy == ''}">Default</option>
+                <option value="cost" th:selected="${orderBy == 'cost'}">Cost</option>
+                <option value="date" th:selected="${orderBy == 'date'}">Date</option>
+              </select>
+
+              <!-- Sort By -->
+              <label for="sortDropdown" class="form-label fw-semibold">Sort By</label>
+              <select id="sortDropdown" name="sortBy" class="form-select">
+                <option value="asc" th:selected="${sortBy == 'asc'}">ASC</option>
+                <option value="desc" th:selected="${sortBy == 'desc'}">DESC</option>
+              </select>
               
               <!-- SUBMIT -->
               <div class="col-12 text-center">
@@ -64,6 +79,8 @@
           </div>
         </div>
       </div>
+
+      
 
       <!-- Travel List -->
       <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 gap-4">

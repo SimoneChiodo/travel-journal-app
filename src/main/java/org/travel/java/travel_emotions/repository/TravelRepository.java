@@ -18,4 +18,9 @@ public interface TravelRepository extends JpaRepository<Travel, Long> {
   // Filtered Index (without tags selected)
   List<Travel> findByPlaceContainingIgnoreCaseAndFeelingsContainingIgnoreCase(String place, String feelings);
 
+  // Sorting Methods
+  List<Travel> findByOrderByCostAsc();
+  List<Travel> findByOrderByDateAsc();
+  List<Travel> findByOrderByDateDesc();
+
 }
