@@ -161,9 +161,9 @@
           </ul>
 
           <!-- Tags -->
-          <h4 class="m-0">Tags:</h4>
-          <div class="tags-container p-1">
-            <span class="badge" th:text="${tag.name}" th:each="tag : *{tags}" th:style="'background-color:' + ${tag.hexColor}"></span>
+          <h4 class="mb-2">Tags:</h4>
+          <div class="tags-container">
+            <span class="badge fs-6" th:text="${tag.name}" th:each="tag : *{tags}" th:style="'background-color:' + ${tag.hexColor}"></span>
           </div>
         </div>
       </div> 

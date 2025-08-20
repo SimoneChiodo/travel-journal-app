@@ -132,8 +132,8 @@
                       th:utext="${pos + neg}"></p>
                   </div>
 
-                  <p class="m-0">Tags:</p>
-                  <span class="badge" th:text="${tag.name}" th:each="tag : *{tags}" th:style="'background-color:' + ${tag.hexColor}"></span>
+                  <p class="mb-1">Tags:</p>
+                  <span class="badge fs-6" th:text="${tag.name}" th:each="tag : *{tags}" th:style="'background-color:' + ${tag.hexColor}"></span>
                 </div>
               </div>
             </div>

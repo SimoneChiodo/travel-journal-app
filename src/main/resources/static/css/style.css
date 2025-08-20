@@ -16,6 +16,13 @@
   transform: scale(1.05);
   transition: box-shadow 0.2s ease-in-out, transform 0.3s ease-in-out;
 }
+.hover-shadow-sm {
+  transition: box-shadow 0.3s ease-out;
+}
+.hover-shadow-sm:hover {
+  box-shadow: 0 0 5px 3px lightgray;
+  transition: box-shadow 0.2s ease-in-out;
+}
 
 /* Height */
 .vh-100 {
