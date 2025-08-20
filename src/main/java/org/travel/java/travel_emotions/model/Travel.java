@@ -41,6 +41,10 @@ public class Travel {
   @NotBlank(message = "Place cannot be blank")
   private String place;
 
+  private Double latitude;
+
+  private Double longitude;
+
   @NotBlank(message = "Description cannot be blank")
   private String description;
 
@@ -72,6 +76,22 @@ public class Travel {
   private List<Tag> tags;
 
   // Getters and Setters
+
+  public Double getLatitude() {
+    return this.latitude;
+  }
+
+  public void setLatitude(Double latitude) {
+    this.latitude = latitude;
+  }
+
+  public Double getLongitude() {
+    return this.longitude;
+  }
+
+  public void setLongitude(Double longitude) {
+    this.longitude = longitude;
+  }
 
   public LocalDate getDate() {
     return this.date;

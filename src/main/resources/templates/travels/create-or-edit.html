@@ -10,6 +10,12 @@
 
     <!-- IMPORT CSS -->
     <th:block th:replace="~{fragments :: import-css}"></th:block>
+
+    <!-- IMPORT MAPS -->
+    <th:block th:replace="~{fragments :: import-maps}"></th:block>
+
+    <!-- CALCULATE LAT AND LON - SHOW INPUT SUGGESTIONS JS -->
+    <script th:src="@{/js/geocode.js}" defer></script>
   </head>
   <body>
     <!-- Header -->
@@ -23,8 +29,17 @@
       <form class="row g-3" th:action="${isCreate} ? @{|/travel/create|} : @{/travel/edit/{id}(id=*{id})}" th:object="${travel}" method="POST">
         <!-- Place -->
         <div class="col-md-6">
-          <label for="place" class="form-label fw-semibold">* Place</label>
-          <input type="text" id="place" class="form-control" th:field="*{place}" required />
+          <div style="position: relative;">
+            <label for="place" class="form-label fw-semibold">* Place</label>
+            <input type="text" id="place" class="form-control" th:field="*{place}" autocomplete="off" required />
+            
+            <!-- Lista suggerimenti con Bootstrap -->
+            <ul id="suggestions" class="list-group position-absolute top-100 start-0 end-0 z-2 hover-pointer li-border-gray"></ul>
+          </div>
+
+          <!-- Invisible fields for latitude and longitude (they fill in automatically) -->
+          <input type="hidden" id="latitude" th:field="*{latitude}" />
+          <input type="hidden" id="longitude" th:field="*{longitude}" />
         </div>
 
         <!-- Date -->

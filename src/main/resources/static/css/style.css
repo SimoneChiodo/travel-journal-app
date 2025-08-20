@@ -1,3 +1,14 @@
+/* UTILITIES */
+.hover-pointer {
+  cursor: pointer;
+}
+
+.li-border-gray li,
+.li-border-gray {
+  border-color: #b4b6b9;
+}
+
+/* COMPONENTS */
 /* Accordion (Travel List Page) */
 .accordion-button,
 .accordion-button:focus {
