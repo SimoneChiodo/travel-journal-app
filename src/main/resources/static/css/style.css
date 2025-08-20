@@ -1,8 +1,23 @@
+:root {
+  --header-height: 56px; 
+}
+
 /* UTILITIES */
+/* Cursor */
 .hover-pointer {
   cursor: pointer;
 }
 
+/* Height */
+.vh-100 {
+  height: 100vh;
+}
+
+.vh-100-without-header {
+  height: calc(100vh - var(--header-height)); 
+}
+
+/* List-Item */
 .li-border-gray li,
 .li-border-gray {
   border-color: #b4b6b9;

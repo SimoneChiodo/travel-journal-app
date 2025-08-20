@@ -3,26 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta th:field="*{viewport}" content="width=device-width, initial-scale=1.0" />
-    <title>Home</title>
+    <title>Dashboard</title>
 
     <!-- FAVICON -->
     <link rel="icon" href="#" sizes="16x16 24x24 48x48 64x64 128x128" />
 
     <!-- IMPORT CSS -->
     <th:block th:replace="~{fragments :: import-css}"></th:block>
+
+    <!-- IMPORT MAPS -->
+    <th:block th:replace="~{fragments :: import-maps}"></th:block>
+
+    <!-- Show Maps in Page JS -->
+    <script th:src="@{/js/maps.js}" defer></script>
   </head>
   <body>
     <!-- Header -->
-    <header class="mb-5">
-      <th:block th:replace="~{fragments :: navbar('none')}"></th:block>
+    <header>
+      <th:block th:replace="~{fragments :: navbar('dashboard')}"></th:block>
     </header>
 
     <!-- Main -->
-    <main class="container my-5" th:object="${tag}">
-      <span class="badge" th:text="*{name}" th:style="'background-color:' + *{hexColor}"></span>
-
-      <!-- Edit Tag -->
-      <a class="btn btn-warning" th:href="@{/tag/edit/{id} (id=*{id})}">Edit Tag</a>
+    <main class="">
+      <div id="map" class="vh-100-without-header"></div>
     </main>
   </body>
 </html>

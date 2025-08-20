@@ -120,6 +120,14 @@ public class TravelController {
     return "redirect:/home";
   }
 
+  // Dashboard
+  @GetMapping("/dashboard")
+  public String dashboard(Model model) {
+    
+
+    return "travels/dashboard"; 
+  }
+
   // Filtered Index
   @PostMapping("/home")
   public String filterTravels(@RequestParam(required=false) String search_place, @RequestParam(required=false) String search_feelings, @RequestParam(required=false) List<Long> search_tags, @RequestParam(required=false) String orderBy, @RequestParam(required = false) String sortBy, Model model) {

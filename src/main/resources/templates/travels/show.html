@@ -13,10 +13,13 @@
 
     <!-- IMPORT MAPS -->
     <th:block th:replace="~{fragments :: import-maps}"></th:block>
+    
+    <!-- Show Maps in Page JS -->
+    <script th:src="@{/js/maps-with-marker.js}" defer></script>
   </head>
   <body>
     <!-- Header -->
-    <header>
+    <header class="mb-5">
       <th:block th:replace="~{fragments :: navbar('none')}"></th:block>
     </header>
 
