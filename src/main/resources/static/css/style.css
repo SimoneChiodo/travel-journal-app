@@ -31,6 +31,20 @@
   z-index: 1000;
 }
 
+/* Color */
+.deselected {
+  opacity: 0.5;
+}
+
+/* Link */
+.transparent-link {
+  color: inherit;
+  text-decoration: none;
+}
+.transparent-link:hover {
+  color: #0a58ca;
+}
+
 /* List-Item */
 .li-border-gray li,
 .li-border-gray {
@@ -50,7 +64,7 @@
   transition: transform 0s; /* Slide duration */
 }
 
-#carouselIndicators .carousel-indicators.custom-thumbnails {
+#carousel .carousel-indicators.custom-thumbnails {
   display: flex;
   justify-content: center;
   gap: 0.5rem;
@@ -58,7 +72,7 @@
   height: auto;
 }
 
-#carouselIndicators .carousel-indicators.custom-thumbnails button {
+#carousel .carousel-indicators.custom-thumbnails button {
   width: 18%;
   height: 18%;
   border: none;
@@ -69,19 +83,22 @@
   justify-content: center;
 }
 
-#carouselIndicators .carousel-indicators.custom-thumbnails img {
+#carousel .carousel-indicators.custom-thumbnails img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-#carouselIndicators {
-  min-width: 90% !important;
-  max-width: 90% !important;
 }
 
 /* Travel Card (Travel List Page) */
 .card-travel img{
   height: 170px;
   object-fit: cover;
+}
+
+/* RESPONSIVE */
+@media screen and (min-width: 992px) {
+  #carousel,
+  .travel-details {
+    width: 50% !important;
+  }
 }

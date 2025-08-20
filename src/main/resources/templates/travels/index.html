@@ -104,7 +104,7 @@
       </div>
 
       <!-- Travel List -->
-      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 gap-2">
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-3">
         <div class="col" th:each="travel : ${travels}" th:object="${travel}">
           <div class="card card-travel h-100 hover-pointer hover-shadow" th:onclick="|window.location.href='@{/travel/{id}(id=*{id})}'|">
             <img th:if="*{photos.size() > 0}"  th:src="*{photos[0]}" class="card-img-top" alt="..." draggable="false">
@@ -124,12 +124,12 @@
                 <!-- Rating, Tags -->
                 <div class="bottom-part">
                   <div class="d-flex justify-content-between mb-2">
-                    <p class="card-text m-0" 
-                      th:with="pos=${#strings.repeat('🦾', travel.strengthRating)}, neg=${#strings.repeat('N', 5 - travel.strengthRating)}" 
-                      th:text="${pos + neg}"></p>
-                    <p class="card-text m-0" 
-                      th:with="pos=${#strings.repeat('$', travel.monetaryRating)}, neg=${#strings.repeat('N', 5 - travel.monetaryRating)}" 
-                      th:text="${pos + neg}"></p>
+                    <p class="card-text m-0"
+                      th:with="pos=${#strings.repeat(&quot;<i class='fa-solid fa-hand-fist me-1'></i>&quot;, travel.strengthRating)}, neg=${#strings.repeat(&quot;<i class='fa-solid fa-hand-fist deselected me-1'></i>&quot;, 5 - travel.strengthRating)}" 
+                      th:utext="${pos + neg}"></p>
+                    <p class="card-text m-0"
+                      th:with="pos=${#strings.repeat(&quot;<i class='fa-solid fa-dollar-sign me-1'></i>&quot;, travel.monetaryRating)}, neg=${#strings.repeat(&quot;<i class='fa-solid fa-dollar-sign deselected me-1'></i>&quot;, 5 - travel.monetaryRating)}" 
+                      th:utext="${pos + neg}"></p>
                   </div>
 
                   <p class="m-0">Tags:</p>
