@@ -19,10 +19,17 @@
 
     <!-- Main -->
     <main class="container my-5" th:object="${tag}">
-      <span class="badge" th:text="*{name}" th:style="'background-color:' + *{hexColor}"></span>
-
+      <span class="badge fs-2 me-3" th:text="*{name}" th:style="'background-color:' + *{hexColor}"></span>
+      
       <!-- Edit Tag -->
-      <a class="btn btn-warning" th:href="@{/tag/edit/{id} (id=*{id})}">Edit Tag</a>
+      <a class="transparent-link h-auto p-1" th:href="@{/tag/edit/{id} (id=*{id})}">
+        <i class="fa-solid fa-pencil fs-1"></i>
+      </a>
+
+      <div class="color-info mt-4">
+        <h4 class="m-0 d-inline">Color: </h4>
+        <span class="fs-5" th:text="*{hexColor}"></span>
+      </div>
     </main>
   </body>
 </html>
