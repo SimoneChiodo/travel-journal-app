@@ -1,9 +1,12 @@
 package org.travel.java.travel_emotions.controller;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,7 +126,25 @@ public class TravelController {
   // Dashboard
   @GetMapping("/dashboard")
   public String dashboard(Model model) {
-    model.addAttribute("travels", travelService.findAll());
+    List<Travel> travels = travelService.findAll();
+
+    // Total cost of travels
+    BigDecimal totalCost = travels.stream()
+      .map(Travel::getCost)
+      .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+    // Calcolo data inizio e fine
+    Optional<LocalDate> startDate = travels.stream()
+      .map(Travel::getDate)
+      .min(LocalDate::compareTo);
+    Optional<LocalDate> endDate = travels.stream()
+      .map(Travel::getDate)
+      .max(LocalDate::compareTo);
+
+    model.addAttribute("travels", travels);
+    model.addAttribute("totalCost", totalCost);
+    model.addAttribute("startDate", startDate.orElse(null));
+    model.addAttribute("endDate", endDate.orElse(null));
 
     return "travels/dashboard"; 
   }

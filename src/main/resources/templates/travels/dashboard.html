@@ -16,6 +16,9 @@
 
     <!-- Show Maps in Page JS -->
     <script th:src="@{/js/maps.js}" defer></script>
+
+    <!-- CUSTOM CSS -->
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}" />
   </head>
   <body>
     <!-- Header -->
@@ -24,12 +27,31 @@
     </header>
 
     <!-- Main -->
-    <main class="">
+    <main class="vh-100-without-header position-relative">
       <ul class="d-none">
         <li th:each="travel : ${travels}" class="travels" th:data-lat="${travel.latitude}" th:data-lon="${travel.longitude}" th:text="${travel.place}"></li>
       </ul>
+      
+      <div id="info-panel" class="position-absolute top-0 bottom-0 end-0 z-1000 p-3">
+        <h2>Trip Summary</h2>
 
-      <div id="map" class="vh-100-without-header"></div>
+        <ul>
+          <li>
+            <h4>Financial Cost:</h4>
+            <h5 th:text="|€ ${totalCost}|"></h5>
+          </li>
+          <li>
+            <h4>Start Date:</h4>
+            <h5 th:text="${startDate}"></h5>
+          </li>
+          <li>
+            <h4>End Date:</h4>
+            <h5 th:text="${endDate}"></h5>
+          </li>
+        </ul>
+      </div>
+
+      <div id="map" class="h-100"></div>
     </main>
   </body>
 </html>
