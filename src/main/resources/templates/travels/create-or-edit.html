@@ -96,11 +96,6 @@
               <label class="form-check-label" th:for="${'tag-' + tag.id}"><span class="badge" th:text="${tag.name}" th:style="'background-color:' + ${tag.hexColor}"></span></label>
             </div>
           </div>
-
-          <!-- Add new tag button -->
-          <div class="text-center">
-            <a class="btn btn-outline-success mt-3" th:href="@{/tag/create}" rel="noopener noreferrer">+ Create New Tag</a>
-          </div>
         </div>
 
 

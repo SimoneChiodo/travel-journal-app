@@ -3,9 +3,18 @@
 }
 
 /* UTILITIES */
-/* Cursor */
+/* Hover */
 .hover-pointer {
   cursor: pointer;
+}
+
+.hover-shadow {
+  transition: box-shadow 0.3s ease-out, transform 0.2s ease-in-out;
+}
+.hover-shadow:hover {
+  box-shadow: 0 0 13px 6px lightgray;
+  transform: scale(1.05);
+  transition: box-shadow 0.2s ease-in-out, transform 0.3s ease-in-out;
 }
 
 /* Height */
@@ -69,4 +78,10 @@
 #carouselIndicators {
   min-width: 90% !important;
   max-width: 90% !important;
+}
+
+/* Travel Card (Travel List Page) */
+.card-travel img{
+  height: 170px;
+  object-fit: cover;
 }
