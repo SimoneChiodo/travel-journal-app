@@ -25,6 +25,10 @@
 
     <!-- Main -->
     <main class="">
+      <ul class="d-none">
+        <li th:each="travel : ${travels}" class="travels" th:data-lat="${travel.latitude}" th:data-lon="${travel.longitude}" th:text="${travel.place}"></li>
+      </ul>
+
       <div id="map" class="vh-100-without-header"></div>
     </main>
   </body>

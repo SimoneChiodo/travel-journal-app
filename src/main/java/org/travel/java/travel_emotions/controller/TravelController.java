@@ -123,7 +123,7 @@ public class TravelController {
   // Dashboard
   @GetMapping("/dashboard")
   public String dashboard(Model model) {
-    
+    model.addAttribute("travels", travelService.findAll());
 
     return "travels/dashboard"; 
   }
