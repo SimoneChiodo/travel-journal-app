@@ -151,21 +151,28 @@ public class TravelController {
 
   // Filtered Index
   @PostMapping("/home")
-  public String filterTravels(@RequestParam(required=false) String search_place, @RequestParam(required=false) String search_feelings, @RequestParam(required=false) List<Long> search_tags, @RequestParam(required=false) String orderBy, @RequestParam(required = false) String sortBy, Model model) {
+  public String filterTravels(@RequestParam(required=false) String search_place, @RequestParam(required=false) String search_date, 
+      @RequestParam(required=false) String search_cost, @RequestParam(required=false) String search_strength_rating, 
+      @RequestParam(required=false) String search_monetary_rating, @RequestParam(required=false) List<Long> search_tags, 
+      @RequestParam(required=false) String orderBy, @RequestParam(required = false) String sortBy, Model model) {
     // Sorting Methods
     orderBy = orderBy != null ? orderBy : "";
     model.addAttribute("orderBy", orderBy); 
     sortBy = sortBy != null ? sortBy : "asc";
     model.addAttribute("sortBy", sortBy); 
+
     // Filtered travels
-    List<Travel> travels = travelService.filterTravels(search_place, search_feelings, search_tags);
+    List<Travel> travels = travelService.filterTravels(search_place, search_date, search_cost, search_strength_rating, search_monetary_rating, search_tags);
     travels = sortTravels(travels, orderBy, sortBy);
     model.addAttribute("travels", travels); 
     // All tags
     model.addAttribute("tags", tagService.findAll()); 
     // Filters
     model.addAttribute("search_place", search_place != null ? search_place : "");
-    model.addAttribute("search_feelings", search_feelings != null ? search_feelings : "");
+    model.addAttribute("search_date", search_date != null ? search_date : "");
+    model.addAttribute("search_cost", search_cost != null ? search_cost : "");
+    model.addAttribute("search_strength_rating", search_strength_rating != null ? search_strength_rating : "");
+    model.addAttribute("search_monetary_rating", search_monetary_rating != null ? search_monetary_rating : "");
     model.addAttribute("search_tags", search_tags != null ? search_tags : new ArrayList<Long>());
     
     return "travels/index";
@@ -183,6 +190,12 @@ public class TravelController {
           case "date":
             travels.sort(Comparator.comparing(Travel::getDate));
             break;
+          case "strengthRating":
+            travels.sort(Comparator.comparing(Travel::getStrengthRating));
+            break;
+          case "monetaryRating":
+            travels.sort(Comparator.comparing(Travel::getMonetaryRating));
+            break;
         }
       } else { // Descending order
         switch (orderBy) {
@@ -191,6 +204,12 @@ public class TravelController {
             break;
           case "date":
             travels.sort(Comparator.comparing(Travel::getDate).reversed());
+            break;
+          case "strengthRating":
+            travels.sort(Comparator.comparing(Travel::getStrengthRating).reversed());
+            break;
+          case "monetaryRating":
+            travels.sort(Comparator.comparing(Travel::getMonetaryRating).reversed());
             break;
         }
       }

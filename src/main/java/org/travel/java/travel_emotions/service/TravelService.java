@@ -1,5 +1,7 @@
 package org.travel.java.travel_emotions.service;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,20 +42,29 @@ public class TravelService {
   }
 
   // Filtered Index
-  public List<Travel> filterTravels(String place, String feelings, List<Long> tagIds) {
+  public List<Travel> filterTravels(String place, String date, String cost, String strengthRating, String monetaryRating, List<Long> tagIds) {
     boolean hasPlace = place != null && !place.isBlank();
-    boolean hasFeelings = feelings != null && !feelings.isBlank();
+    boolean hasDate = date != null && !date.isBlank();
+    boolean hasCost = cost != null && !cost.isBlank();
+    boolean hasStrengthRating = strengthRating != null && !strengthRating.isBlank();
+    boolean hasMonetaryRating = monetaryRating != null && !monetaryRating.isBlank();
     boolean hasTags = tagIds != null && !tagIds.isEmpty();
 
+    // Convert String inputs to appropriate types
+    LocalDate parsedDate = hasDate ? LocalDate.parse(date) : LocalDate.of(1900, 1, 1); // default "old date"
+    BigDecimal parsedCost = hasCost ? new BigDecimal(cost) : BigDecimal.valueOf(Double.MAX_VALUE); // default infinite
+    Integer parsedStrengthRating = hasStrengthRating ? Integer.valueOf(strengthRating) : 5; // default max rating
+    Integer parsedMonetaryRating = hasMonetaryRating ? Integer.valueOf(monetaryRating) : 5; // default max rating
+
     // No filters applied
-    if (!hasPlace && !hasFeelings && !hasTags) 
+    if (!hasPlace && !hasDate && !hasCost && !hasStrengthRating && !hasMonetaryRating && !hasTags) 
       return travelRepository.findAll();
     
     // If tags are selected
     if (hasTags) 
-      return travelRepository.findDistinctByPlaceContainingIgnoreCaseAndFeelingsContainingIgnoreCaseAndTags_IdIn(place, feelings, tagIds);
+      return travelRepository.findDistinctByPlaceContainingIgnoreCaseAndDateGreaterThanEqualAndCostLessThanEqualAndStrengthRatingLessThanEqualAndMonetaryRatingLessThanEqualAndTags_IdIn(place, parsedDate, parsedCost, parsedStrengthRating, parsedMonetaryRating, tagIds);
     else // If no tags are selected
-      return travelRepository.findByPlaceContainingIgnoreCaseAndFeelingsContainingIgnoreCase(place, feelings);
+      return travelRepository.findByPlaceContainingIgnoreCaseAndDateGreaterThanEqualAndCostLessThanEqualAndStrengthRatingLessThanEqualAndMonetaryRatingLessThanEqual(place, parsedDate, parsedCost, parsedStrengthRating, parsedMonetaryRating);
   }
 
 }

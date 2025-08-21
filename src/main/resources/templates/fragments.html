@@ -73,9 +73,20 @@
               <li class="nav-item">
                 <a
                   class="nav-link"
+                  th:href="@{/tag}"
+                  th:classappend="${currentPage == 'tagList'} ? 'active' : ''"
+                  >Tag List</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
                   th:href="@{/travel/create}"
                   th:classappend="${currentPage == 'addTravel'} ? 'active' : ''"
-                  >Add Travel</a
+                  >
+                    <i class="fa-solid fa-plus fa-xs"></i>
+                    Add Travel
+                  </a
                 >
               </li>
               <li class="nav-item">
@@ -83,15 +94,10 @@
                   class="nav-link"
                   th:href="@{/tag/create}"
                   th:classappend="${currentPage == 'addTag'} ? 'active' : ''"
-                  >Add Tag</a
-                >
-              </li>
-              <li class="nav-item">
-                <a
-                  class="nav-link"
-                  th:href="@{/tag}"
-                  th:classappend="${currentPage == 'tagList'} ? 'active' : ''"
-                  >Tag List</a
+                  >
+                    <i class="fa-solid fa-plus fa-xs"></i>
+                    Add Tag
+                  </a
                 >
               </li>
               <li class="nav-item">

@@ -43,10 +43,28 @@
                 <input type="text" id="place" class="form-control" th:name="search_place" th:value="${search_place}" />
               </div>
 
-              <!-- Feelings -->
+              <!-- Date -->
               <div class="col-12">
-                <label for="feelings" class="form-label fw-semibold">Feelings</label>
-                <input type="text" id="feelings" class="form-control" th:name="search_feelings" th:value="${search_feelings}" />
+                <label for="feelings" class="form-label fw-semibold">Starting from this Date</label>
+                <input type="date" id="feelings" class="form-control" th:name="search_date" th:value="${search_date}" />
+              </div>
+
+              <!-- Cost -->
+              <div class="col-12">
+                <label for="feelings" class="form-label fw-semibold">Maximum Cost</label>
+                <input type="number" id="feelings" class="form-control" th:name="search_cost" th:value="${search_cost}" step="0.01" min="0" />
+              </div>
+
+              <!-- Strength Rating -->
+              <div class="col-12">
+                <label for="feelings" class="form-label fw-semibold">Maximum Strength Rating (1-5)</label>
+                <input type="number" id="feelings" class="form-control" th:name="search_strength_rating" th:value="${search_strength_rating}" min="1" max="5" />
+              </div>
+
+              <!-- Monetary Rating -->
+              <div class="col-12">
+                <label for="feelings" class="form-label fw-semibold">Maximum Monetary Rating (1-5)</label>
+                <input type="number" id="feelings" class="form-control" th:name="search_monetary_rating" th:value="${search_monetary_rating}" min="1" max="5" />
               </div>
 
               <!-- Tags -->
@@ -75,6 +93,8 @@
                   <option value="" th:selected="${orderBy == ''}">Default</option>
                   <option value="cost" th:selected="${orderBy == 'cost'}">Cost</option>
                   <option value="date" th:selected="${orderBy == 'date'}">Date</option>
+                  <option value="strengthRating" th:selected="${orderBy == 'strengthRating'}">Strength Rating</option>
+                  <option value="monetaryRating" th:selected="${orderBy == 'monetaryRating'}">Monetary Rating</option>
                 </select>
               </div>
 
