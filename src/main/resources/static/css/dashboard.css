@@ -1,7 +1,29 @@
 #info-panel {
-  width: 20%;
   background-color: rgba(80, 80, 80, .8);
   color: whitesmoke;
   font-weight: 500;
   font-size: 1.3rem;
+
+  /* hei: 20%; */
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+ul{
+  padding: 0;
+}
+ul li {
+  list-style: none;
+}
+
+
+/* RESPONSIVE */
+@media screen and (min-width: 992px) {
+  #info-panel {
+    width: 20%;
+    bottom: 0;
+    left: auto;
+    right: 0;
+  }
 }

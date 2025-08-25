@@ -32,7 +32,7 @@
       <form class="row g-3" th:action="${isCreate} ? @{|/travel/create|} : @{/travel/edit/{id}(id=*{id})}" th:object="${travel}" method="POST" enctype="multipart/form-data">
         <!-- Place -->
         <div class="col-md-6 position-relative">
-          <label for="place" class="form-label fw-semibold">* Place</label>
+          <label for="place" class="form-label fs-5 fw-semibold">* Place</label>
           <input type="text" id="place" class="form-control" th:field="*{place}" autocomplete="off" required />
           <!-- Suggestions List -->
           <ul id="suggestions" class="list-group position-absolute top-100 start-0 end-0 z-2 hover-pointer li-border-gray"></ul>
@@ -44,55 +44,55 @@
 
         <!-- Date -->
         <div class="col-md-6">
-          <label for="date" class="form-label fw-semibold">* Date</label>
+          <label for="date" class="form-label fs-5 fw-semibold">* Date</label>
           <input type="date" id="date" class="form-control" th:field="*{date}" required />
         </div>
 
         <!-- Description -->
         <div class="col-12">
-          <label for="description" class="form-label fw-semibold">* Description</label>
+          <label for="description" class="form-label fs-5 fw-semibold">* Description</label>
           <textarea id="description" class="form-control" th:field="*{description}" required></textarea>
         </div>
 
         <!-- Strength Rating -->
         <div class="col-md-6">
-          <label for="strengthRating" class="form-label fw-semibold">* Strength Rating (1-5)</label>
+          <label for="strengthRating" class="form-label fs-5 fw-semibold">* Strength Rating (1-5)</label>
           <input type="number" id="strengthRating" class="form-control" th:field="*{strengthRating}" min="1" max="5" required />
         </div>
 
         <!-- Monetary Rating -->
         <div class="col-md-6">
-          <label for="monetaryRating" class="form-label fw-semibold">* Monetary Rating (1-5)</label>
+          <label for="monetaryRating" class="form-label fs-5 fw-semibold">* Monetary Rating (1-5)</label>
           <input type="number" id="monetaryRating" class="form-control" th:field="*{monetaryRating}" min="1" max="5" required />
         </div>
 
         <!-- Cost -->
         <div class="col-12">
-          <label for="cost" class="form-label fw-semibold">* Cost</label>
+          <label for="cost" class="form-label fs-5 fw-semibold">* Cost</label>
           <input type="number" id="cost" class="form-control" th:field="*{cost}" step="0.01" min="0" required />
         </div>
 
         <!-- Feelings -->
         <div class="col-12">
-          <label for="feelings" class="form-label fw-semibold">Feelings</label>
+          <label for="feelings" class="form-label fs-5 fw-semibold">Feelings</label>
           <input type="text" id="feelings" class="form-control" th:field="*{feelings}" />
         </div>
 
         <!-- Reflection Positive -->
         <div class="col-md-6">
-          <label for="reflectionPos" class="form-label fw-semibold">Reflection Positive</label>
+          <label for="reflectionPos" class="form-label fs-5 fw-semibold">Reflection Positive</label>
           <textarea id="reflectionPos" class="form-control" th:field="*{reflectionPos}"></textarea>
         </div>
 
         <!-- Reflection Negative -->
         <div class="col-md-6">
-          <label for="reflectionNeg" class="form-label fw-semibold">Reflection Negative</label>
+          <label for="reflectionNeg" class="form-label fs-5 fw-semibold">Reflection Negative</label>
           <textarea id="reflectionNeg" class="form-control" th:field="*{reflectionNeg}"></textarea>
         </div>
 
         <!-- Tags -->
         <div class="col-12">
-          <label class="form-label fw-semibold">Tags</label>
+          <label class="form-label fs-5 fw-semibold">Tags</label>
           <p th:if="${tags.size() == 0}" class="m-0">No tags available</p>
 
           <div class="d-flex gap-3">
@@ -106,7 +106,7 @@
 
         <!-- Images -->
         <div class="col-12"> <!-- Title -->
-          <label class="form-label fw-semibold m-0">Photos (Link or File)</label>
+          <label class="form-label fs-5 fw-semibold m-0">Photos (Link / File)</label>
         </div>
         <div class="col-md-6 mt-1"> <!-- Link -->
           <label class="form-label fw-semibold">Link</label>
@@ -147,7 +147,7 @@
 
         <!-- Videos -->
         <div class="col-12"> <!-- Title -->
-          <label class="form-label fw-semibold m-0">Videos (Link or File) <b>(The name must not contain youtube or youtu.be)</b></label>
+          <label class="form-label fs-5 fw-semibold m-0">Videos (Link / File) <i>(The name must not contain youtube or youtu.be)</i></label>
         </div>
         <div class="col-md-6 mt-1"> <!-- Link -->
           <label class="form-label fw-semibold">Link</label>

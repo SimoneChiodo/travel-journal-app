@@ -32,13 +32,13 @@
         <li th:each="travel : ${travels}" class="travels" th:data-lat="${travel.latitude}" th:data-lon="${travel.longitude}" th:text="${travel.place}"></li>
       </ul>
 
-      <div id="info-panel" class="position-absolute top-0 bottom-0 end-0 z-1000 p-3">
-        <h2>Trip Summary</h2>
+      <div id="info-panel" class="position-absolute z-1000 p-3">
+        <h2 class="text-center text-lg-start"><i>Trip Summary</i></h2>
 
         <h4 th:if="${travels.size() == 0}">No travel yet...</h4>
 
-        <ul th:unless="${travels.size() == 0}">
-          <li>
+        <ul th:unless="${travels.size() == 0}" class="d-flex flex-wrap row-gap-3 column-gap-4 gap-lg-2 m-0">
+          <li class="w-100">
             <h4>Financial Cost:</h4>
             <h5 th:text="|€ ${totalCost}|"></h5>
           </li>

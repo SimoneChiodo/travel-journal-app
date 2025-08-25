@@ -23,7 +23,7 @@
       <form class="row g-3" th:action="${isCreate} ? @{/tag/create} : @{/tag/edit/{id}(id=*{id})}" th:object="${tag}" method="POST">
         <!-- Name -->
         <div class="col-12">
-          <label for="name" class="form-label fw-semibold">Name</label>
+          <label for="name" class="form-label fs-5 fw-semibold">Name</label>
           <input type="text" id="name" class="form-control" th:field="*{name}" required
             th:classappend="${#fields.hasErrors('name')} ? ' is-invalid' : ''" />
           
@@ -33,7 +33,7 @@
 
         <!-- Color -->
         <div class="col-12">
-          <label for="hexColor" class="form-label fw-semibold">Color</label>
+          <label for="hexColor" class="form-label fs-5 fw-semibold">Color</label>
           <input type="color" id="hexColor" class="form-control form-control-color" value="#563d7c" th:field="*{hexColor}" />
         </div>
 
