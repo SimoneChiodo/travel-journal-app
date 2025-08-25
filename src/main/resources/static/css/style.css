@@ -24,6 +24,13 @@
   transition: box-shadow 0.2s ease-in-out;
 }
 
+.blue-hover:hover {
+  color: #0a58ca;
+}
+.red-hover:hover {
+  color: #dc3545;
+}
+
 /* Height */
 .vh-100 {
   height: 100vh;
@@ -48,9 +55,6 @@
   color: inherit;
   text-decoration: none;
 }
-.transparent-link:hover {
-  color: #0a58ca;
-}
 
 /* List-Item */
 .li-border-gray li,
@@ -72,28 +76,13 @@
 }
 
 #carousel .carousel-indicators.custom-thumbnails {
-  display: flex;
-  justify-content: center;
   gap: 0.5rem;
-  position: static;
-  height: auto;
 }
 
 #carousel .carousel-indicators.custom-thumbnails button {
-  width: 18%;
-  height: 18%;
-  border: none;
+  width: 80px;
+  height: 80px;
   background: none;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#carousel .carousel-indicators.custom-thumbnails img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 /* Travel Card (Travel List Page) */

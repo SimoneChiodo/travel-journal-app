@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta th:field="*{viewport}" content="width=device-width, initial-scale=1.0" />
-    <title>Show</title>
+    <title>Show Travel</title>
 
     <!-- FAVICON -->
     <link rel="icon" href="#" sizes="16x16 24x24 48x48 64x64 128x128" />
@@ -29,77 +29,79 @@
         <!-- Images and Videos Carousel -->
         <div id="carousel" class="carousel slide">
           <!-- Images and Videos -->
-          <div class="carousel-inner ratio ratio-4x3">
+          <div class="carousel-inner ratio ratio-4x3 object-fit-contain">
             <!-- If there are NOT Images or Videos -->
             <th:block th:if="${travel.photos.size() == 0 and travel.videos.size() == 0}">
               <!-- Fallback -->
-              <div class="carousel-item active">
-                <h2>No image</h2>
+              <div class="carousel-item d-flex align-items-center justify-content-center active">
+                <h2><i>No images available</i></h2>
               </div>
             </th:block>
 
             <!-- Show all Images -->
             <th:block th:each="photo, iterStat : ${travel.photos}" th:if="${travel.photos.size() != 0}">
-              <div class="d-flex align-items-center" th:classappend="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
-                <img th:src="${photo}" class="d-block w-100" alt="Photo" />
+              <div th:class="carousel-item" th:classappend="${iterStat.index == 0} ? ' active'">
+                <img th:src="${photo}" class="d-block w-100 h-100 object-fit-contain" alt="Photo" />
               </div>
             </th:block>
 
             <!-- Show all Videos -->
             <th:block th:each="video, iterStat : ${travel.videos}" th:if="${travel.videos.size() != 0}">
               <div th:classappend="${(travel.photos.size() == 0 and iterStat.index == 0) ? 'carousel-item active' : 'carousel-item'}">
-                <!-- iframe for YouTube/Vimeo videos -->
-                <th:block th:if="${video.contains('youtube') or video.contains('youtu.be') or video.contains('vimeo')}">
-                  <iframe th:src="${video}" width="100%" height="400" frameborder="0" allowfullscreen></iframe>
-                </th:block>
-                <!-- Video tag for other videos -->
-                <th:block th:unless="${video.contains('youtube') or video.contains('youtu.be') or video.contains('vimeo')}">
-                  <video controls class="d-block w-100" height="400">
-                    <source th:src="${video}" />
-                    Il tuo browser non supporta il tag video.
-                  </video>
-                </th:block>
+
+                <!-- Contenitore "immagine-like" -->
+                <div class="video-container w-100 h-100 d-flex align-items-center position-relative overflow-hidden">
+                  <!-- iframe per YouTube/Vimeo -->
+                  <th:block th:if="${video.contains('youtube') or video.contains('youtu.be') or video.contains('vimeo')}">
+                    <iframe th:src="${video}" class="d-block w-100 h-100 object-fit-contain" frameborder="0" allowfullscreen></iframe>
+                  </th:block>
+
+                  <!-- video per file locali -->
+                  <th:block th:unless="${video.contains('youtube') or video.contains('youtu.be') or video.contains('vimeo')}">
+                    <video controls class="d-block w-100 object-fit-contain">
+                      <source th:src="${video}" />
+                      Il tuo browser non supporta il tag video.
+                    </video>
+                  </th:block>
+                </div>
               </div>
             </th:block>
           </div>
 
           <!-- Indicators -->
-          <div class="carousel-indicators custom-thumbnails mt-3">
-            <!-- If there are NOT Images or Videos -->
-            <th:block th:if="${travel.photos.size() == 0 and travel.videos.size() != 0}">
-              <!-- Fallback -->
-              <button type="button" data-bs-target="#carouselIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1">
-                <h2>Empty</h2>
-              </button>
-            </th:block>
-
+          <div class="carousel-indicators custom-thumbnails d-flex justify-content-center position-static h-auto mt-3">
             <!-- Show Images Indicators -->
-            <th:block th:each="photo, iterStat : ${travel.photos}" th:if="${travel.photos.size() != 0}">
+            <th:block th:if="${travel.photos.size() != 0}" th:each="photo, iterStat : ${travel.photos}">
               <button type="button"
-                      data-bs-target="#carouselIndicators"
+                      data-bs-target="#carousel"
                       th:attr="data-bs-slide-to=${iterStat.index}, 
                         aria-current=${iterStat.index == 0} ? 'true' : null,
                         aria-label=${'Slide ' + (iterStat.index + 1)}"
+                      class="border-0 d-flex align-items-center justify-content-center p-0"
                       th:classappend="${iterStat.index == 0} ? 'active' : ''">
-                <img th:src="${photo}" alt="Thumbnail" class="hover-pointer" draggable="false" />
+                <img th:src="${photo}" alt="Thumbnail" class="object-fit-contain hover-pointer w-100 h-100" draggable="false" />
               </button>
             </th:block>
 
             <!-- Show Videos Indicators -->
-            <th:block th:each="video, iterStat : ${travel.videos}" th:if="${travel.videos.size() != 0}">
+            <th:block th:if="${travel.videos.size() != 0}" th:each="video, iterStat : ${travel.videos}">
               <button type="button"
-                      data-bs-target="#carouselIndicators"
+                      data-bs-target="#carousel"
                       th:attr="data-bs-slide-to=${(travel.photos.size() + iterStat.index)}, 
                         aria-current=${(travel.photos.size() == 0 and iterStat.index == 0)} ? 'true' : null,
                         aria-label=${'Slide ' + (travel.photos.size() + iterStat.index + 1)}"
+                      class="border-0 d-flex align-items-center justify-content-center p-0"
                       th:classappend="${(travel.photos.size() == 0 and iterStat.index == 0) ? 'active' : ''}">
-                <!-- Icon or thymbnail for YouTube/Vimeo metti un’icona o thumbnail -->
+                <!-- Youtube Logo -->
                 <th:block th:if="${video.contains('youtube') or video.contains('youtu.be') or video.contains('vimeo')}">
-                  <img src="/assets/img/video-thumbnail.png" alt="Video Thumbnail" class="hover-pointer" draggable="false" />
+                  <img src="/uploads/fallback/youtube-logo.png"
+                    alt="Video Thumbnail"
+                    class="object-fit-contain hover-pointer w-100 h-100"
+                    draggable="false" />
                 </th:block>
                 <!-- Video tag for other videos -->
                 <th:block th:unless="${video.contains('youtube') or video.contains('youtu.be') or video.contains('vimeo')}">
-                  <video width="60" height="40" preload="metadata" muted>
+                  <video height="40" preload="metadata" muted>
                     <source th:src="${video}" />
                   </video>
                 </th:block>
@@ -114,10 +116,16 @@
             <!-- Place -->
             <h2 id="place" class="mb-2" th:text="*{place}"></h2>
             
-            <!-- Edit Travel -->
-            <a class="transparent-link h-auto p-1" th:href="@{/travel/edit/{id} (id=*{id})}">
-              <i class="fa-solid fa-pencil fs-1"></i>
-            </a>
+            <div class="d-flex gap-1">
+              <!-- Edit Travel -->
+              <a class="transparent-link blue-hover h-auto p-1" th:href="@{/travel/edit/{id} (id=*{id})}">
+                <i class="fa-solid fa-pencil fs-1"></i>
+              </a>
+              <!-- Delete Travel -->
+              <a class="transparent-link red-hover h-auto p-1" th:href="@{/travel/delete/{id} (id=*{id})}">
+                <i class="fa-solid fa-trash fs-1"></i>
+              </a>
+            </div>
           </div>
 
           <!-- Date -->
@@ -128,9 +136,7 @@
             <!-- Feelings -->
             <li class="card-text"> 
               <span class="fw-semibold">Feelings:</span>
-              <p class="card-text d-inline m-0">
-                € [[*{feelings}]]
-              </p>
+              <p class="card-text d-inline m-0" th:utext="*{feelings != null and feelings != '' ? feelings: '<i>empty</i>'}"></p>
             </li>
 
             <!-- Rating -->
@@ -162,7 +168,7 @@
 
           <!-- Tags -->
           <h4 class="mb-2">Tags:</h4>
-          <div class="tags-container">
+          <div class="tags-container  d-flex flex-wrap gap-3">
             <span class="badge fs-6" th:text="${tag.name}" th:each="tag : *{tags}" th:style="'background-color:' + ${tag.hexColor}"></span>
           </div>
         </div>
@@ -179,11 +185,11 @@
           <!-- Reflections -->
           <div class="col-12 col-md-6"> 
             <h4 class="m-0">Positive Reflection:</h4>
-            <p class="d-inline m-0" th:text="*{reflectionPos}"></p>
+            <p class="d-inline m-0" th:utext="*{reflectionPos != null and reflectionPos != '' ? reflectionPos: '<i>empty</i>'}"></p>
           </div>
           <div class="col-12 col-md-6"> 
             <h4 class="m-0">Negative Reflection:</h4>
-            <p class="d-inline m-0" th:text="*{reflectionNeg}"></p>
+            <p class="d-inline m-0" th:utext="*{reflectionNeg != null and reflectionNeg != '' ? reflectionNeg: '<i>empty</i>'}"></p>
           </div>
         </div>
 

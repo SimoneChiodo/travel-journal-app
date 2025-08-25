@@ -3,6 +3,7 @@ package org.travel.java.travel_emotions.service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -65,6 +66,16 @@ public class TravelService {
       return travelRepository.findDistinctByPlaceContainingIgnoreCaseAndDateGreaterThanEqualAndCostLessThanEqualAndStrengthRatingLessThanEqualAndMonetaryRatingLessThanEqualAndTags_IdIn(place, parsedDate, parsedCost, parsedStrengthRating, parsedMonetaryRating, tagIds);
     else // If no tags are selected
       return travelRepository.findByPlaceContainingIgnoreCaseAndDateGreaterThanEqualAndCostLessThanEqualAndStrengthRatingLessThanEqualAndMonetaryRatingLessThanEqual(place, parsedDate, parsedCost, parsedStrengthRating, parsedMonetaryRating);
+  }
+
+
+  // Check if a file (photo or video) is unused across all travels, excluding a specific travel by ID
+  public boolean isFileUnused(String filePath, Long excludeTravelId) {
+    return travelRepository.findAll().stream()
+        .filter(t -> !t.getId().equals(excludeTravelId))
+        .flatMap(t -> Stream.<String>concat(t.getPhotos().stream(), t.getVideos().stream()))
+
+        .noneMatch(path -> path.equals(filePath));
   }
 
 }

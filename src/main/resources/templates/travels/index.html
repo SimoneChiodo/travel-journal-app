@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta th:field="*{viewport}" content="width=device-width, initial-scale=1.0" />
-    <title>Home</title>
+    <title>Travels</title>
 
     <!-- FAVICON -->
     <link rel="icon" href="#" sizes="16x16 24x24 48x48 64x64 128x128" />
@@ -13,7 +13,7 @@
   </head>
   <body>
     <!-- Header -->
-    <header class="mb-5">
+    <header>
       <th:block th:replace="~{fragments :: navbar('home')}"></th:block>
     </header>
 
@@ -70,6 +70,8 @@
               <!-- Tags -->
               <div class="col-12">
                 <label class="form-label fw-semibold">Tags</label>
+                <p th:if="${tags.size() == 0}" class="m-0">No tags available</p>
+                
                 <div class="d-flex gap-3">
                   <div th:each="tag : ${tags}" class="form-check">
                     <input class="form-check-input" type="checkbox" th:id="${'tag-' + tag.id}" th:name="search_tags" th:value="${tag.id}" th:checked="${search_tags.contains(tag.id)}" />
@@ -121,6 +123,15 @@
             </form>
           </div>
         </div>
+      </div>
+
+      <!-- No Travels Saved Message -->
+      <div th:if="${travels.size() == 0}" class="text-center">
+        <h2 class="display-4 mb-3">No Travels saved</h2>
+        <a class="btn btn-outline-success btn-lg" th:href="@{/travel/create}">
+          <i class="fa-solid fa-plus fa-xs"></i>
+          Add Travel
+        </a>
       </div>
 
       <!-- Travel List -->

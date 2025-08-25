@@ -31,11 +31,13 @@
       <ul class="d-none">
         <li th:each="travel : ${travels}" class="travels" th:data-lat="${travel.latitude}" th:data-lon="${travel.longitude}" th:text="${travel.place}"></li>
       </ul>
-      
+
       <div id="info-panel" class="position-absolute top-0 bottom-0 end-0 z-1000 p-3">
         <h2>Trip Summary</h2>
 
-        <ul>
+        <h4 th:if="${travels.size() == 0}">No travel yet...</h4>
+
+        <ul th:unless="${travels.size() == 0}">
           <li>
             <h4>Financial Cost:</h4>
             <h5 th:text="|€ ${totalCost}|"></h5>

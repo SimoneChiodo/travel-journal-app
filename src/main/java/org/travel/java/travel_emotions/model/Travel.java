@@ -2,6 +2,7 @@ package org.travel.java.travel_emotions.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CollectionTable;
@@ -30,13 +31,13 @@ public class Travel {
 
   @ElementCollection
   @CollectionTable(name = "travel_photos", joinColumns = @JoinColumn(name = "travel_id"))
-  @Column(name = "photo_url")
-  private List<String> photos;
+  @Column(name = "photo_url", columnDefinition = "TEXT")
+  private List<String> photos; // Contains URLs or Local Paths
 
   @ElementCollection
   @CollectionTable(name = "travel_videos", joinColumns = @JoinColumn(name = "travel_id"))
-  @Column(name = "video_url")
-  private List<String> videos;
+  @Column(name = "video_url", columnDefinition = "TEXT")
+  private List<String> videos; // Contains URLs or Local Paths
 
   @NotBlank(message = "Place cannot be blank")
   private String place;
@@ -74,6 +75,28 @@ public class Travel {
             joinColumns = @JoinColumn(name = "travel_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
   private List<Tag> tags;
+
+  // Constructors
+  public Travel() {
+    this.tags = new ArrayList<>();
+    this.photos = new ArrayList<>();
+    this.videos = new ArrayList<>();
+  }
+
+  // Update function
+  public void updateBasicValues(Travel formTravel){
+    setPlace(formTravel.getPlace());
+    setDate(formTravel.getDate());
+    setCost(formTravel.getCost());
+    setStrengthRating(formTravel.getStrengthRating());
+    setMonetaryRating(formTravel.getMonetaryRating());
+    setFeelings(formTravel.getFeelings());
+    setDescription(formTravel.getDescription());
+    setReflectionPos(formTravel.getReflectionPos());
+    setReflectionNeg(formTravel.getReflectionNeg());
+    setLatitude(formTravel.getLatitude());
+    setLongitude(formTravel.getLongitude());
+  }
 
   // Getters and Setters
 

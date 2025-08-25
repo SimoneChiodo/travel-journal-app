@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta th:field="*{viewport}" content="width=device-width, initial-scale=1.0" />
-    <title th:text="${isCreate} ? 'Create' : 'Edit'"></title>
+    <title th:text="${isCreate} ? 'Create Travel' : 'Edit Travel'"></title>
 
     <!-- FAVICON -->
     <link rel="icon" href="#" sizes="16x16 24x24 48x48 64x64 128x128" />
@@ -16,6 +16,9 @@
 
     <!-- CALCULATE LAT AND LON - SHOW INPUT SUGGESTIONS JS -->
     <script th:src="@{/js/geocode.js}" defer></script>
+
+    <!-- CUSTOM JS -->
+    <script th:src="@{/js/travels-create.js}" defer></script>
   </head>
   <body>
     <!-- Header -->
@@ -26,7 +29,7 @@
     <!-- Main -->
     <main class="container my-5">
       <!-- FORM -->
-      <form class="row g-3" th:action="${isCreate} ? @{|/travel/create|} : @{/travel/edit/{id}(id=*{id})}" th:object="${travel}" method="POST">
+      <form class="row g-3" th:action="${isCreate} ? @{|/travel/create|} : @{/travel/edit/{id}(id=*{id})}" th:object="${travel}" method="POST" enctype="multipart/form-data">
         <!-- Place -->
         <div class="col-md-6 position-relative">
           <label for="place" class="form-label fw-semibold">* Place</label>
@@ -90,25 +93,113 @@
         <!-- Tags -->
         <div class="col-12">
           <label class="form-label fw-semibold">Tags</label>
+          <p th:if="${tags.size() == 0}" class="m-0">No tags available</p>
+
           <div class="d-flex gap-3">
             <div th:each="tag : ${tags}" class="form-check">
-              <input class="form-check-input" type="checkbox"  th:id="${'tag-' + tag.id}" th:field="*{tags}" th:value="${tag.id}">
+              <input class="form-check-input" type="checkbox" th:id="${'tag-' + tag.id}" name="selectedTags" th:value="${tag.id}" th:checked="${travel.tags.contains(tag)}">
               <label class="form-check-label" th:for="${'tag-' + tag.id}"><span class="badge" th:text="${tag.name}" th:style="'background-color:' + ${tag.hexColor}"></span></label>
             </div>
           </div>
         </div>
 
 
-        <!-- Photos -->
-        <div class="col-12">
-          <label for="photos" class="form-label fw-semibold">Photo URLs</label>
-          <input type="url" id="photos" class="form-control" th:field="*{photos}" placeholder="https://example.com/photo1.jpg">
+        <!-- Images -->
+        <div class="col-12"> <!-- Title -->
+          <label class="form-label fw-semibold m-0">Photos (Link or File)</label>
+        </div>
+        <div class="col-md-6 mt-1"> <!-- Link -->
+          <label class="form-label fw-semibold">Link</label>
+          <div id="imageUrlContainer">
+            <!-- Existing photo URLs will be inserted dynamically if editing -->
+            <div class="input-group mb-2">
+              <input type="url" name="photoLinks" class="form-control" placeholder="https://example.com/photo.jpg">
+              <button type="button" class="btn btn-outline-success add-btn">
+                <i class="fa-solid fa-plus fa-xs"></i>
+                Add
+              </button>
+              <button type="button" class="btn btn-outline-danger remove-btn d-none">
+                <i class="fa-solid fa-xmark fa-lg"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 mt-1"> <!-- File -->
+          <label for="imageFiles" class="form-label fw-semibold">File</label>
+          <input type="file" id="imageFiles" name="photoFiles" class="form-control mb-2" multiple>
+        </div>
+        <div class="col-12"> <!-- Preview -->
+          <div class="row row-cols-2 row-cols-md-4 row-cols-lg-6" id="photoPreview">
+            <!-- Existing photos from DB -->
+            <th:block th:each="photo : ${travel.photos}">
+              <div class="col mb-2">
+                <div class="position-relative">
+                  <img th:src="${photo}" class="img-fluid rounded">
+                  <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 remove-btn">
+                    <i class="fa-solid fa-xmark fa-lg"></i>
+                  </button>
+                  <input type="hidden" name="photoLinks" th:value="${photo}"> <!-- To send info about this image to backend -->
+                </div>
+              </div>
+            </th:block>
+          </div>
         </div>
 
         <!-- Videos -->
-        <div class="col-12">
-          <label for="videos" class="form-label fw-semibold">Video URLs</label>
-          <input type="url" id="videos" class="form-control" th:field="*{videos}" placeholder="https://youtube.com/...">
+        <div class="col-12"> <!-- Title -->
+          <label class="form-label fw-semibold m-0">Videos (Link or File) <b>(The name must not contain youtube or youtu.be)</b></label>
+        </div>
+        <div class="col-md-6 mt-1"> <!-- Link -->
+          <label class="form-label fw-semibold">Link</label>
+          <div id="videoUrlContainer">
+            <div class="input-group mb-2">
+              <input type="url" name="videoLinks" class="form-control" placeholder="https://youtube.com/...">
+              <button type="button" class="btn btn-outline-success add-btn">
+                <i class="fa-solid fa-plus fa-xs"></i>
+                Add
+              </button>
+              <button type="button" class="btn btn-outline-danger remove-btn d-none">
+                <i class="fa-solid fa-xmark fa-lg"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 mt-1"> <!-- File -->
+          <label for="videoFiles" class="form-label fw-semibold">File</label>
+          <input type="file" id="videoFiles" name="videoFiles" class="form-control mb-2" multiple>
+        </div>
+        <div class="col-12"> <!-- Preview -->
+          <div class="row row-cols-2 row-cols-md-4 row-cols-lg-6" id="videoPreview">
+            <th:block th:each="video : ${travel.videos}">
+              <!-- Not Youtube video -->
+              <th:block th:if="${!(video.contains('youtube') or video.contains('youtu.be'))}">
+                <div class="col mb-2">
+                  <div class="position-relative">
+                    <video controls class="img-fluid rounded">
+                      <source th:src="${video}" type="video/mp4">
+                      Your browser does not support the video tag.
+                    </video>
+                    <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 remove-btn">
+                      <i class="fa-solid fa-xmark fa-lg"></i>
+                    </button>
+                    <input type="hidden" name="videoLinks" th:value="${video}"> <!-- To send info about this video to backend -->
+                  </div>
+                </div>
+              </th:block>
+              <!-- Only Youtube video -->
+              <th:block th:unless="${!(video.contains('youtube') or video.contains('youtu.be'))}">
+                <div class="col mb-2">
+                  <div class="position-relative">
+                    <iframe th:src="${video}" frameborder="0" allowfullscreen class="img-fluid rounded"></iframe>
+                    <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 remove-btn">
+                      <i class="fa-solid fa-xmark fa-lg"></i>
+                    </button>
+                    <input type="hidden" name="videoLinks" th:value="${video}"> <!-- To send info about this video to backend -->
+                  </div>
+                </div>
+              </th:block>
+            </th:block>
+          </div>
         </div>
 
 

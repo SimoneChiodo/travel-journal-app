@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.travel.java.travel_emotions.model.Tag;
+import org.travel.java.travel_emotions.model.Travel;
 import org.travel.java.travel_emotions.service.TagService;
 
 import jakarta.validation.Valid;
@@ -97,8 +98,13 @@ public class TagController {
   // DELETE
   @GetMapping("/delete/{id}")
   public String delete(@PathVariable Long id) {
+    // Remove tag from all Travel
+    Tag tag = tagService.findById(id);
+    for (Travel travel : tag.getTravels()) 
+      travel.getTags().remove(tag);
+
     tagService.delete(id);
-    return "redirect:/tags/";
+    return "redirect:/tag";
   }
   
 }

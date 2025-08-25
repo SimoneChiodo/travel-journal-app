@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta th:field="*{viewport}" content="width=device-width, initial-scale=1.0" />
-    <title>Home</title>
+    <title>Show Tag</title>
 
     <!-- FAVICON -->
     <link rel="icon" href="#" sizes="16x16 24x24 48x48 64x64 128x128" />
@@ -19,12 +19,21 @@
 
     <!-- Main -->
     <main class="container my-5" th:object="${tag}">
-      <span class="badge fs-2 me-3" th:text="*{name}" th:style="'background-color:' + *{hexColor}"></span>
-      
-      <!-- Edit Tag -->
-      <a class="transparent-link h-auto p-1" th:href="@{/tag/edit/{id} (id=*{id})}">
-        <i class="fa-solid fa-pencil fs-1"></i>
-      </a>
+      <div class="d-flex gap-2 mb-1">
+        <span class="badge fs-2" th:text="*{name}" th:style="'background-color:' + *{hexColor}"></span>
+        
+        <!-- Edit Tag -->
+        <div class="d-flex gap-1">
+          <!-- Edit Travel -->
+          <a class="transparent-link blue-hover h-auto p-1" th:href="@{/tag/edit/{id} (id=*{id})}">
+            <i class="fa-solid fa-pencil fs-1"></i>
+          </a>
+          <!-- Delete Travel -->
+          <a class="transparent-link red-hover h-auto p-1" th:href="@{/tag/delete/{id} (id=*{id})}">
+            <i class="fa-solid fa-trash fs-1"></i>
+          </a>
+        </div>
+      </div>
 
       <div class="color-info mt-4">
         <h4 class="m-0 d-inline">Color: </h4>

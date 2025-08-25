@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta th:field="*{viewport}" content="width=device-width, initial-scale=1.0" />
-    <title>Home</title>
+    <title>Tags</title>
 
     <!-- FAVICON -->
     <link rel="icon" href="#" sizes="16x16 24x24 48x48 64x64 128x128" />
@@ -19,6 +19,15 @@
 
     <!-- Main -->
     <main class="container my-5">
+      <!-- No Tags Saved Message -->
+      <div th:if="${tags.size() == 0}" class="text-center">
+        <h2 class="display-4 mb-3">No Tags saved</h2>
+        <a class="btn btn-outline-success btn-lg" th:href="@{/tag/create}">
+          <i class="fa-solid fa-plus fa-xs"></i>
+          Add Tag
+        </a>
+      </div>
+
       <div class="tags-container d-flex flex-wrap gap-3">
         <span class="fs-5 badge hover-pointer hover-shadow-sm " th:each="tag : ${tags}" th:object="${tag}" th:text="*{name}" 
           th:style="'background-color:' + *{hexColor}" th:onclick="|window.location.href='@{/tag/{id} (id=*{id})}'|"></span>
