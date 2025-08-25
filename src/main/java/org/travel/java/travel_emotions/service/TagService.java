@@ -1,6 +1,7 @@
 package org.travel.java.travel_emotions.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,9 @@ public class TagService {
   // SHOW
   public Tag findById(Long id) {
     return tagRepository.findById(id).get();
+  }
+  public Optional<Tag> findByIdOptional(Long id) {
+    return tagRepository.findById(id);
   }
 
   // CREATE

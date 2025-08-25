@@ -17,6 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import org.travel.java.travel_emotions.model.Travel;
 import org.travel.java.travel_emotions.service.TagService;
 import org.travel.java.travel_emotions.service.TravelService;
@@ -69,7 +71,8 @@ public class TravelController {
   // SHOW
   @GetMapping("/travel/{id}")
   public String show(@PathVariable Long id, Model model) {
-    model.addAttribute("travel", travelService.findById(id));
+    Travel travel = travelService.findByIdOptional(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Travel not found"));
+    model.addAttribute("travel", travel);
     return "travels/show"; 
   }
 

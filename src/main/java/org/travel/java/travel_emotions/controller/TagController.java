@@ -1,6 +1,7 @@
 package org.travel.java.travel_emotions.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.server.ResponseStatusException;
 import org.travel.java.travel_emotions.model.Tag;
 import org.travel.java.travel_emotions.model.Travel;
 import org.travel.java.travel_emotions.service.TagService;
@@ -32,7 +34,8 @@ public class TagController {
   // SHOW
   @GetMapping("/{id}")
   public String show(@PathVariable Long id, Model model) {
-    model.addAttribute("tag", tagService.findById(id));
+    Tag tag = tagService.findByIdOptional(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag not found"));
+    model.addAttribute("tag", tag);
     return "tags/show"; 
   }
 

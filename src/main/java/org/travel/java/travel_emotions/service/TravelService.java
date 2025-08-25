@@ -3,6 +3,7 @@ package org.travel.java.travel_emotions.service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class TravelService {
   // SHOW
   public Travel findById(Long id) {
     return travelRepository.findById(id).get();
+  }
+  public Optional<Travel> findByIdOptional(Long id) {
+    return travelRepository.findById(id);
   }
 
   // CREATE
