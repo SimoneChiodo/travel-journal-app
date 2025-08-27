@@ -51,13 +51,13 @@
 
                 <!-- Contenitore "immagine-like" -->
                 <div class="video-container w-100 h-100 d-flex align-items-center position-relative overflow-hidden">
-                  <!-- iframe per YouTube/Vimeo -->
-                  <th:block th:if="${video.contains('youtube') or video.contains('youtu.be') or video.contains('vimeo')}">
+                  <!-- iframe per YouTube -->
+                  <th:block th:if="${video.contains('youtube') or video.contains('youtu.be')}">
                     <iframe th:src="${video}" class="d-block w-100 h-100 object-fit-contain" frameborder="0" allowfullscreen></iframe>
                   </th:block>
 
                   <!-- video per file locali -->
-                  <th:block th:unless="${video.contains('youtube') or video.contains('youtu.be') or video.contains('vimeo')}">
+                  <th:block th:unless="${video.contains('youtube') or video.contains('youtu.be')}">
                     <video controls class="d-block w-100 object-fit-contain">
                       <source th:src="${video}" />
                       Il tuo browser non supporta il tag video.
@@ -93,14 +93,14 @@
                       class="border-0 d-flex align-items-center justify-content-center p-0"
                       th:classappend="${(travel.photos.size() == 0 and iterStat.index == 0) ? 'active' : ''}">
                 <!-- Youtube Logo -->
-                <th:block th:if="${video.contains('youtube') or video.contains('youtu.be') or video.contains('vimeo')}">
+                <th:block th:if="${video.contains('youtube') or video.contains('youtu.be')}">
                   <img src="/uploads/fallback/youtube-logo.png"
                     alt="Video Thumbnail"
                     class="object-fit-contain hover-pointer w-100 h-100"
                     draggable="false" />
                 </th:block>
                 <!-- Video tag for other videos -->
-                <th:block th:unless="${video.contains('youtube') or video.contains('youtu.be') or video.contains('vimeo')}">
+                <th:block th:unless="${video.contains('youtube') or video.contains('youtu.be')}">
                   <video height="40" preload="metadata" muted>
                     <source th:src="${video}" />
                   </video>
