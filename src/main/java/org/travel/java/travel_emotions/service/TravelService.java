@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,10 +55,10 @@ public class TravelService {
     boolean hasTags = tagIds != null && !tagIds.isEmpty();
 
     // Convert String inputs to appropriate types
-    LocalDate parsedDate = hasDate ? LocalDate.parse(date) : LocalDate.of(1900, 1, 1); // default "old date"
-    BigDecimal parsedCost = hasCost ? new BigDecimal(cost) : BigDecimal.valueOf(Double.MAX_VALUE); // default infinite
-    Integer parsedStrengthRating = hasStrengthRating ? Integer.valueOf(strengthRating) : 5; // default max rating
-    Integer parsedMonetaryRating = hasMonetaryRating ? Integer.valueOf(monetaryRating) : 5; // default max rating
+    LocalDate parsedDate = hasDate ? LocalDate.parse(date) : LocalDate.of(1900, 1, 1); // default "old date" (show all after this date)
+    BigDecimal parsedCost = hasCost ? new BigDecimal(cost) : BigDecimal.valueOf(Double.MAX_VALUE); // default infinite (show all)
+    Integer parsedStrengthRating = hasStrengthRating ? Integer.valueOf(strengthRating) : 5; // default max rating (show all)
+    Integer parsedMonetaryRating = hasMonetaryRating ? Integer.valueOf(monetaryRating) : 5; // default max rating (show all)
 
     // No filters applied
     if (!hasPlace && !hasDate && !hasCost && !hasStrengthRating && !hasMonetaryRating && !hasTags) 
@@ -70,16 +69,6 @@ public class TravelService {
       return travelRepository.findDistinctByPlaceContainingIgnoreCaseAndDateGreaterThanEqualAndCostLessThanEqualAndStrengthRatingLessThanEqualAndMonetaryRatingLessThanEqualAndTags_IdIn(place, parsedDate, parsedCost, parsedStrengthRating, parsedMonetaryRating, tagIds);
     else // If no tags are selected
       return travelRepository.findByPlaceContainingIgnoreCaseAndDateGreaterThanEqualAndCostLessThanEqualAndStrengthRatingLessThanEqualAndMonetaryRatingLessThanEqual(place, parsedDate, parsedCost, parsedStrengthRating, parsedMonetaryRating);
-  }
-
-
-  // Check if a file (photo or video) is unused across all travels, excluding a specific travel by ID
-  public boolean isFileUnused(String filePath, Long excludeTravelId) {
-    return travelRepository.findAll().stream()
-        .filter(t -> !t.getId().equals(excludeTravelId))
-        .flatMap(t -> Stream.<String>concat(t.getPhotos().stream(), t.getVideos().stream()))
-
-        .noneMatch(path -> path.equals(filePath));
   }
 
 }

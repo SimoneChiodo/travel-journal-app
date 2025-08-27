@@ -44,7 +44,7 @@ public class TravelController {
   @Autowired
   private TagService tagService;
 
-  // Costants for local paths
+  // Constants for local paths
   private static final String PROJECT_DIR = System.getProperty("user.dir");
   private static final String PHOTO_DIR = PROJECT_DIR + "/uploads/images";
   private static final String VIDEO_DIR = PROJECT_DIR + "/uploads/videos";
@@ -57,7 +57,9 @@ public class TravelController {
   // INDEX
   @GetMapping("/home")
   public String index(Model model) {
+    // Travel list
     model.addAttribute("travels", travelService.findAll());
+    // Filters
     model.addAttribute("search_place", new String());
     model.addAttribute("search_feelings", new String());
     model.addAttribute("search_tags", new ArrayList<Long>());
@@ -71,6 +73,7 @@ public class TravelController {
   // SHOW
   @GetMapping("/travel/{id}")
   public String show(@PathVariable Long id, Model model) {
+    // Send 404 error if the travel is not found
     Travel travel = travelService.findByIdOptional(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Travel not found"));
     model.addAttribute("travel", travel);
     return "travels/show"; 
@@ -92,10 +95,10 @@ public class TravelController {
     @Valid @ModelAttribute Travel formTravel,
     BindingResult bindingResult,
     @RequestParam(required = false) List<Long> selectedTags,
-    @RequestParam(value = "photoFiles", required = false) MultipartFile[] photoFiles,
-    @RequestParam(value = "videoFiles", required = false) MultipartFile[] videoFiles,
     @RequestParam(required = false) List<String> photoLinks,
     @RequestParam(required = false) List<String> videoLinks,
+    @RequestParam(required = false) MultipartFile[] photoFiles,
+    @RequestParam(required = false) MultipartFile[] videoFiles,
     Model model
   ) throws IOException {
     // Check errors
@@ -106,68 +109,28 @@ public class TravelController {
         return "travels/create-or-edit";
     }
 
-    // Add tags
-    if (selectedTags != null) 
-      formTravel.setTags(selectedTags.stream().map(actualId -> tagService.findById(actualId)).collect(Collectors.toList()));
+    // Initialize empty lists for photos and videos if null
+    ensureListsInitialized(formTravel);
 
-    // If there arent photos or videos
-    if (formTravel.getPhotos() == null) formTravel.setPhotos(new ArrayList<>());
-    if (formTravel.getVideos() == null) formTravel.setVideos(new ArrayList<>());
 
-    // Create Link Photos
-    if (photoLinks != null) {
-      for (String link : photoLinks) {
-        link = link.trim(); // Remove white spaces
-        if (!link.isEmpty() && !formTravel.getPhotos().contains(link)) // Avoid duplicates
-          formTravel.getPhotos().add(link);
-      }
-    }
+    // Apply tags selected by user
+    applyTags(formTravel, selectedTags);
 
-    // Create File Photos
-    if (photoFiles != null) {
-      // Create a directory if it does not exists
-      Files.createDirectories(Paths.get(PHOTO_DIR));
-      
-      for (MultipartFile file : photoFiles) {
-        if (!file.isEmpty()) { // Check if the file is uploaded correctly
-          String filename = UUID.randomUUID() + "_" + file.getOriginalFilename(); // Create an unique file name
-          Path filePath = Paths.get(PHOTO_DIR, filename); // Create the file path
-          file.transferTo(filePath.toFile()); // Path transformed into a file where the photo data is transferred
-          String relativePath = "/uploads/images/" + filename; // Create local path
-          if (!formTravel.getPhotos().contains(relativePath)) // Avoid duplicates
-            formTravel.getPhotos().add(relativePath);
-        }
-      }
-    }
 
-    // Create Link Videos (hidden input)
-    if (videoLinks != null) {
-      for (String link : videoLinks) {
-        link = link.trim(); // Remove white spaces
-        if (!link.isEmpty()) {
-          String embedLink = link.startsWith("https://www.youtube.com/embed/") ? link : convertToYouTubeEmbed(link); // Convert Youtube video to embed format
-          if (!formTravel.getVideos().contains(embedLink))  // Avoid duplicates
-            formTravel.getVideos().add(embedLink);
-        }
-      }
-    }
+    // Add photo links from form
+    addLinks(formTravel.getPhotos(), photoLinks, false);
 
-    // Create File Videos
-    if (videoFiles != null) {
-      // Create a directory if it does not exists
-      Files.createDirectories(Paths.get(VIDEO_DIR));
 
-      for (MultipartFile file : videoFiles) {
-        if (!file.isEmpty()) { // Check if the file is uploaded correctly
-          String filename = UUID.randomUUID() + "_" + file.getOriginalFilename(); // Create an unique file name
-          Path filePath = Paths.get(VIDEO_DIR, filename); // Create the file path
-          file.transferTo(filePath.toFile()); // Path transformed into a file where the video data is transferred
-          String relativePath = "/uploads/videos/" + filename; // Create local path
-          if (!formTravel.getVideos().contains(relativePath)) // Avoid duplicates
-            formTravel.getVideos().add(relativePath);
-        }
-      }
-    }
+    // Add uploaded photo files
+    addUploadedFiles(formTravel.getPhotos(), photoFiles, PHOTO_DIR, "/uploads/images/");
+
+
+    // Add video links from form (convert to YouTube embed if needed)
+    addLinks(formTravel.getVideos(), videoLinks, true);
+
+
+    // Add uploaded video files
+    addUploadedFiles(formTravel.getVideos(), videoFiles, VIDEO_DIR, "/uploads/videos/");
 
     travelService.save(formTravel);
     return "redirect:/home";
@@ -191,10 +154,10 @@ public class TravelController {
     @Valid @ModelAttribute Travel formTravel,
     BindingResult bindingResult,
     @RequestParam(required = false) List<Long> selectedTags,
-    @RequestParam(value = "photoFiles", required = false) MultipartFile[] photoFiles,
-    @RequestParam(value = "videoFiles", required = false) MultipartFile[] videoFiles,
     @RequestParam(required = false) List<String> photoLinks,
     @RequestParam(required = false) List<String> videoLinks,
+    @RequestParam(required = false) MultipartFile[] photoFiles,
+    @RequestParam(required = false) MultipartFile[] videoFiles,
     Model model
   ) throws IOException {
     // Check errors
@@ -213,83 +176,37 @@ public class TravelController {
     // Update Basic Values
     existingTravel.updateBasicValues(formTravel);
 
-    // Update Tags
-    if (selectedTags != null)
-      existingTravel.setTags(selectedTags.stream().map(actualId -> tagService.findById(actualId)).collect(Collectors.toList()));
-    else
-      existingTravel.setTags(new ArrayList<>());
+    // Apply selected tags
+    applyTags(existingTravel, selectedTags);
 
-    // To update Images and Videos
+
+    // Prepare updated photo and video lists
     List<String> updatedPhotos = new ArrayList<>(existingTravel.getPhotos());
     List<String> updatedVideos = new ArrayList<>(existingTravel.getVideos());
-    
-    // Remove photos and videos from form
-    if (photoLinks != null) // Keep only those submitted by the form
+
+
+    // Retain only links submitted by the form
+    if (photoLinks != null) 
       updatedPhotos.retainAll(photoLinks);
-    if (videoLinks != null) // Keep only those submitted by the form
+    if (videoLinks != null) 
       updatedVideos.retainAll(videoLinks);
 
-    // Update Link Photos
-    if (photoLinks != null) {
-      for (String link : photoLinks) {
-        link = link.trim(); // Remove white spaces
-        if (!link.isEmpty() && !updatedPhotos.contains(link)) // Avoid duplicates
-          updatedPhotos.add(link); 
-      }
-    }
 
-    // Update File Photos
-    if (photoFiles != null) {
-      // Create a directory if it does not exists
-      Files.createDirectories(Paths.get(PHOTO_DIR));
+    // Add photo links and files
+    addLinks(updatedPhotos, photoLinks, false);
+    addUploadedFiles(updatedPhotos, photoFiles, PHOTO_DIR, "/uploads/images/");
 
-      for (MultipartFile file : photoFiles) {
-        if (!file.isEmpty()) { // Check if the file is uploaded correctly
-          String filename = UUID.randomUUID() + "_" + file.getOriginalFilename(); // Create an unique file name
-          Path filePath = Paths.get(PHOTO_DIR, filename); // Create the file path
-          file.transferTo(filePath.toFile()); // Path transformed into a file where the photo data is transferred
-          String relativePath = "/uploads/images/" + filename; // Create local path
-          if (!updatedPhotos.contains(relativePath)) // Avoid duplicates
-            updatedPhotos.add(relativePath);
-        }
-      }
-    }
 
-    // Update Link Videos 
-    existingTravel.setVideos(new ArrayList<>()); // reset videos
-    if (videoLinks != null) {
-      for (String link : videoLinks) {
-        link = link.trim(); // Remove white spaces
-        if (!link.isEmpty()) {
-          String embedLink = link.startsWith("https://www.youtube.com/embed/") ? link : convertToYouTubeEmbed(link); // Convert Youtube link into embed format
-          if (!updatedVideos.contains(embedLink)) // Avoid duplicates
-            updatedVideos.add(embedLink);
-        }
-      }
-    }
-
-    // Upload File Videos
-    if (videoFiles != null) {
-      // Create a directory if it does not exists
-      Files.createDirectories(Paths.get(VIDEO_DIR));
-
-      for (MultipartFile file : videoFiles) {
-        if (!file.isEmpty()) { // Check if the file is uploaded correctly
-          String filename = UUID.randomUUID() + "_" + file.getOriginalFilename(); // Create an unique file name
-          Path filePath = Paths.get(VIDEO_DIR, filename); // Create the file path
-          file.transferTo(filePath.toFile()); // Path transformed into a file where the video data is transferred
-          String relativePath = "/uploads/videos/" + filename; // Create local path
-          if (!updatedVideos.contains(relativePath)) // Avoid duplicates
-            updatedVideos.add(relativePath);
-        }
-      }
-    }
+    // Add video links and files
+    addLinks(updatedVideos, videoLinks, true);
+    addUploadedFiles(updatedVideos, videoFiles, VIDEO_DIR, "/uploads/videos/");
 
     // Actually update photos and videos
     existingTravel.setPhotos(updatedPhotos);
     existingTravel.setVideos(updatedVideos);
 
-    travelService.save(existingTravel); // Update Travel
+    // Update Travel
+    travelService.save(existingTravel); 
 
     // Delete unused videos and photos
     cleanupUnusedFiles(oldPhotos, existingTravel.getPhotos());
@@ -298,12 +215,10 @@ public class TravelController {
     return "redirect:/travel/" + existingTravel.getId(); 
   }
 
-
-
   // DELETE
   @GetMapping("/travel/delete/{id}")
   public String delete(@PathVariable Long id) throws IOException {
-    // Get the photos and videos to delete
+    // Get the photos and videos of the travel to delete
     Travel travel = travelService.findById(id); 
     List<String> photosToDelete = new ArrayList<>(travel.getPhotos());
     List<String> videosToDelete = new ArrayList<>(travel.getVideos());
@@ -325,16 +240,16 @@ public class TravelController {
 
     // Total cost of travels
     BigDecimal totalCost = travels.stream()
-      .map(Travel::getCost)
-      .reduce(BigDecimal.ZERO, BigDecimal::add);
+      .map(travel -> travel.getCost())
+      .reduce(BigDecimal.ZERO, (sum, n) -> sum.add(n)); // If there are no travels the value is 0
 
     // Calcolo data inizio e fine
     Optional<LocalDate> startDate = travels.stream()
-      .map(Travel::getDate)
-      .min(LocalDate::compareTo);
+      .map(travel -> travel.getDate())
+      .min((date1, date2) -> date1.compareTo(date2)); // Take the min date
     Optional<LocalDate> endDate = travels.stream()
-      .map(Travel::getDate)
-      .max(LocalDate::compareTo);
+      .map(travel -> travel.getDate())
+      .max((date1, date2) -> date1.compareTo(date2)); // Take the max date
 
     model.addAttribute("travels", travels);
     model.addAttribute("totalCost", totalCost);
@@ -357,8 +272,8 @@ public class TravelController {
     model.addAttribute("sortBy", sortBy); 
 
     // Filtered travels
-    List<Travel> travels = travelService.filterTravels(search_place, search_date, search_cost, search_strength_rating, search_monetary_rating, search_tags);
-    travels = sortTravels(travels, orderBy, sortBy);
+    List<Travel> travels = travelService.filterTravels(search_place, search_date, search_cost, search_strength_rating, search_monetary_rating, search_tags); // Filter result
+    travels = sortTravels(travels, orderBy, sortBy); // Sort result
     model.addAttribute("travels", travels); 
     // All tags
     model.addAttribute("tags", tagService.findAll()); 
@@ -381,38 +296,37 @@ public class TravelController {
       if(sortBy.equals("asc")){
         switch (orderBy) {
           case "cost":
-            travels.sort(Comparator.comparing(Travel::getCost));
+            travels.sort(Comparator.comparing(travel -> travel.getCost()));
             break;
           case "date":
-            travels.sort(Comparator.comparing(Travel::getDate));
+            travels.sort(Comparator.comparing(travel -> travel.getDate()));
             break;
           case "strengthRating":
-            travels.sort(Comparator.comparing(Travel::getStrengthRating));
+            travels.sort(Comparator.comparing(travel -> travel.getStrengthRating()));
             break;
           case "monetaryRating":
-            travels.sort(Comparator.comparing(Travel::getMonetaryRating));
+            travels.sort(Comparator.comparing(travel -> travel.getMonetaryRating()));
             break;
         }
       } else { // Descending order
         switch (orderBy) {
           case "cost":
-            travels.sort(Comparator.comparing(Travel::getCost).reversed());
+            travels.sort(Comparator.comparing((Travel travel) -> travel.getCost()).reversed());
             break;
           case "date":
-            travels.sort(Comparator.comparing(Travel::getDate).reversed());
+            travels.sort(Comparator.comparing((Travel travel) -> travel.getDate()).reversed());
             break;
           case "strengthRating":
-            travels.sort(Comparator.comparing(Travel::getStrengthRating).reversed());
+            travels.sort(Comparator.comparing((Travel travel) -> travel.getStrengthRating()).reversed());
             break;
           case "monetaryRating":
-            travels.sort(Comparator.comparing(Travel::getMonetaryRating).reversed());
+            travels.sort(Comparator.comparing((Travel travel) -> travel.getMonetaryRating()).reversed());
             break;
         }
       }
-    } else { // If orderBy is default
+    } else // If orderBy is default
       if(sortBy.equals("desc"))
         Collections.reverse(travels);
-    }
 
     // Don't sort
     return travels;
@@ -439,12 +353,68 @@ public class TravelController {
   // Function to delete unused files
   private void cleanupUnusedFiles(List<String> oldFiles, List<String> newFiles) throws IOException {
     for (String filePath : oldFiles) {
-      // If its no longer in the new list and isnt an external URL
-      if (!newFiles.contains(filePath) && filePath.startsWith("/uploads/")) {
-        // Delete the unused file
-        Path path = Paths.get(PROJECT_DIR + filePath);
-        Files.deleteIfExists(path);
+      if (!newFiles.contains(filePath) && filePath.startsWith("/uploads/")) { // If its no longer in the new list and isnt an external URL
+        Path path = Paths.get(PROJECT_DIR + filePath); // Get the path of the unused file
+        Files.deleteIfExists(path); // Delete the unused file
       }
+    }
+  }
+
+  // ***********************************
+  //     METODS FOR SAVE AND UPDATE
+  // ***********************************
+
+  // Initialize empty lists for photos and videos
+  private void ensureListsInitialized(Travel travel) {
+    if (travel.getPhotos() == null) 
+      travel.setPhotos(new ArrayList<>());
+    if (travel.getVideos() == null) 
+      travel.setVideos(new ArrayList<>());
+  }
+
+
+  // Apply selected tags to the travel entity
+  private void applyTags(Travel travel, List<Long> selectedTags) {
+    if (selectedTags != null) 
+      travel.setTags(selectedTags.stream()
+      .map(tagService::findById)
+      .collect(Collectors.toList()));
+    else
+      travel.setTags(new ArrayList<>());
+  }
+
+
+  // Add links to photo or video list, optionally converting YouTube links
+  private void addLinks(List<String> targetList, List<String> links, boolean isVideo) {
+    if (links == null) return;
+    
+    for (String link : links) {
+      link = link.trim();
+      if (link.isEmpty()) continue;
+      
+      if (isVideo) 
+        link = link.startsWith("https://www.youtube.com/embed/") ? link : convertToYouTubeEmbed(link);
+      
+      if (!targetList.contains(link)) 
+        targetList.add(link);
+    }
+  }
+
+
+  // Add uploaded files to the target list, saving them on disk
+  private void addUploadedFiles(List<String> targetList, MultipartFile[] files, String uploadDir, String urlPrefix) throws IOException {
+    if (files == null) return;
+
+    Files.createDirectories(Paths.get(uploadDir));
+    for (MultipartFile file : files) {
+      if (file.isEmpty()) continue;
+    
+      String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
+      Path filePath = Paths.get(uploadDir, filename);
+      file.transferTo(filePath.toFile());
+      String relativePath = urlPrefix + filename;
+      if (!targetList.contains(relativePath)) 
+        targetList.add(relativePath);
     }
   }
 }

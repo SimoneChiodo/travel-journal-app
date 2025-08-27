@@ -20,7 +20,7 @@ public class Tag {
   private Long id;
 
   @NotBlank(message = "Name cannot be blank")
-  @Column(unique = true)
+  @Column(unique = true) // This is not handled by Bean Validation, but by the DB -> It's not checked by BindingResult, so I need to check it in the Controller
   private String name;
 
   @NotBlank(message = "Color cannot be blank")

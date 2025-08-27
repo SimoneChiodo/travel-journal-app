@@ -29,9 +29,4 @@ public interface TravelRepository extends JpaRepository<Travel, Long> {
     Integer monetaryRating
   );
 
-  // Sorting Methods
-  List<Travel> findByOrderByCostAsc();
-  List<Travel> findByOrderByDateAsc();
-  List<Travel> findByOrderByDateDesc();
-
 }
