@@ -121,10 +121,10 @@
               <a class="transparent-link blue-hover h-auto p-1" th:href="@{/travel/edit/{id} (id=*{id})}">
                 <i class="fa-solid fa-pencil fs-1"></i>
               </a>
-              <!-- Delete Travel -->
-              <a class="transparent-link red-hover h-auto p-1" th:href="@{/travel/delete/{id} (id=*{id})}">
+              <!-- Delete Travel (Open a modal) -->
+              <button type="button" class="transparent-link red-hover h-auto p-1 border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteModal">
                 <i class="fa-solid fa-trash fs-1"></i>
-              </a>
+              </button>
             </div>
           </div>
 
@@ -196,6 +196,32 @@
 
         <!-- Map -->
         <div id="map" class="rounded rounded-4" style="height: 500px;"></div>
+
+        <!-- Delete Modal -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              
+              <!-- Modal Header -->
+              <div class="modal-header">
+                <h5 class="modal-title">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+              <!-- Modal Body -->
+              <div class="modal-body">
+                Are you sure you want to delete this travel? <br> ⚠ This action cannot be undone! ⚠
+              </div>
+
+              <!-- Modal Footer -->
+              <div class="modal-footer">
+                <a th:href="@{/travel/delete/{id}(id=*{id})}" class="btn btn-danger">Delete</a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              </div>
+
+            </div>
+          </div>
+        </div>
       </div>
     </main>
   </body>
