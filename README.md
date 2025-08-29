@@ -4,7 +4,7 @@
 
 **Travel Journal App** è un’applicazione web personale progettata per raccogliere e visualizzare i momenti più significativi delle vacanze estive, offrendo un’esperienza interattiva e completa. Gli utenti possono creare e gestire viaggi inserendo dettagli come foto, video, luoghi visitati, descrizioni, emozioni, riflessioni positive e negative, costi sostenuti e valutazioni sia soggettive (Strength Rating) sia economiche (Monetary Rating).
 
-Ogni viaggio può essere visualizzato con un’interfaccia intuitiva, che mostra immagini e video in un carosello dinamico e permette di esplorare i luoghi su una mappa interattiva tramite Leaflet.js. I contenuti multimediali supportano sia file locali sia link esterni (come YouTube e Vimeo), con anteprime e strumenti di gestione facili da usare.
+Ogni viaggio può essere visualizzato con un’interfaccia intuitiva, che mostra immagini e video in un carosello dinamico e permette di esplorare i luoghi su una mappa interattiva tramite Leaflet.js. I contenuti multimediali supportano sia file locali sia link esterni (come YouTube), con anteprime e strumenti di gestione facili da usare.
 
 L’app include anche strumenti avanzati di filtraggio e ordinamento dei viaggi per data, costo, valutazioni e tag personalizzati, consentendo di trovare rapidamente i viaggi desiderati. È possibile aggiungere e modificare tag colorati per categorizzare i viaggi secondo interessi personali.
 
